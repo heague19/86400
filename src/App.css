@@ -511,6 +511,38 @@
   color: rgba(255, 255, 255, 0.55);
 }
 
+.fig-detail-handle {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: clamp(13px, 1vw, 15px);
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  align-self: flex-start;
+  margin-top: 8px;
+  transition: color 0.3s, border-color 0.3s;
+}
+
+.fig-detail-handle:hover {
+  color: #ffffff;
+  border-bottom-color: #ffffff;
+}
+
+/* Artist 목록과 같은 카드 그리드. 한 점만 있어도 3열 폭을 유지한다. */
+.fig-detail-works {
+  margin-top: clamp(80px, 12vh, 160px);
+}
+
+/* 인물 사진은 얼굴이 위쪽에 있어 22% 로 당겨두지만 작품은 가운데가 맞다. */
+.fig-detail-works .fig-card-media img {
+  object-position: center;
+}
+
+/* 작품 사진은 벽이 밝아 넘버가 묻힌다. */
+.fig-detail-works .fig-card-index {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
 .fig-detail-back {
   display: inline-block;
   margin-bottom: clamp(24px, 3vw, 48px);

@@ -7,6 +7,7 @@ import logoBlack from './assets/86400black.png'
 // 줄인 웹용 사본만 번들에 넣는다.
 import victorLeePhoto from './assets/VictorLeeProfile.jpg'
 import seoHyeonJeonPhoto from './assets/SeoHyeonJeonProfile.jpg'
+import seoJeonHyuenWork01 from './assets/SeoJeonHyuen-Work01.jpg'
 
 type Page =
   | 'collection'
@@ -502,10 +503,37 @@ const ROOMS = [
  * 놓이는데(Victor Lee · paint / SeoJeon Hyuen · paint / Juhwan Cheon · Toy),
  * 좌표상 역할은 앞 카드 이름 뒤에 붙는다.
  */
-const ARTIST_ROW = [
-  { name: 'Artist Victor Lee', role: 'paint', photo: victorLeePhoto },
-  { name: 'SeoJeon Hyuen', role: 'paint', photo: seoHyeonJeonPhoto },
-  { name: 'Juhwan Cheon', role: 'Toy', photo: null },
+type Artist = {
+  name: string
+  role: string
+  photo: string | null
+  /** 인스타 핸들. @ 없이 저장하고 표시할 때 붙인다. */
+  instagram: string | null
+  works: string[]
+}
+
+const ARTIST_ROW: Artist[] = [
+  {
+    name: 'Artist Victor Lee',
+    role: 'paint',
+    photo: victorLeePhoto,
+    instagram: null,
+    works: [],
+  },
+  {
+    name: 'SeoJeon Hyuen',
+    role: 'paint',
+    photo: seoHyeonJeonPhoto,
+    instagram: 'i_m_i.v___y',
+    works: [seoJeonHyuenWork01],
+  },
+  {
+    name: 'Juhwan Cheon',
+    role: 'Toy',
+    photo: null,
+    instagram: null,
+    works: [],
+  },
 ]
 
 /**
@@ -571,13 +599,13 @@ function ArtistPage({
  *
  * 시안: 카드 526×567 (left 112, top 344) + 이름 48px (left 700, 같은 top).
  * 카드 오른쪽 끝이 638px 이므로 이름과의 간격은 62px.
- * 시안엔 소개 문구가 없어 이름만 두고, 목록으로 돌아갈 링크만 더한다.
+ * 아래 Works 는 시안엔 없는 섹션이라 Artist 목록과 같은 카드 그리드를 그대로 쓴다.
  */
 function ArtistDetailPage({
   artist,
   onBack,
 }: {
-  artist: (typeof ARTIST_ROW)[number]
+  artist: Artist
   onBack: () => void
 }) {
   return (
@@ -594,8 +622,39 @@ function ArtistDetailPage({
         <div className="fig-detail-info">
           <h1 className="fig-detail-name">{artist.name}</h1>
           <span className="fig-detail-role">{artist.role}</span>
+          {artist.instagram && (
+            <a
+              className="fig-detail-handle"
+              href={`https://www.instagram.com/${artist.instagram}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              @{artist.instagram}
+            </a>
+          )}
         </div>
       </div>
+
+      {artist.works.length > 0 && (
+        <div className="fig-detail-works">
+          <h2 className="fig-section-title">Works</h2>
+          <div className="fig-grid">
+            {artist.works.map((work, i) => (
+              <article key={work} className="fig-card">
+                <div className="fig-card-frame">
+                  <CardMedia
+                    photo={work}
+                    alt={`${artist.name} — Work ${i + 1}`}
+                  />
+                  <span className="fig-card-index">
+                    No.{String(i + 1).padStart(2, '0')}
+                  </span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   )
 }
