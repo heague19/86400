@@ -124,15 +124,17 @@ const ARTIST_ROW: Artist[] = [
           '마음이 복잡할 때는 물결을 그립니다.\n이것이 어떠한 잔상인지 구체적으로 그리는 것보다도 마음가는데로, 손길가는데로 이어갑니다. 저희도 마찬가지입니다.\n인생을 살아가는데 뚜렷한 목표가 있던, 흐르는 대로 살아가던 어느 순간 어딘가에 닿아있습니다.\n그것만으로 충분히 가치 있는 삶 아닐까요?',
         ],
       },
-      // 아래 한 점은 이미지만 받은 상태 — 제목·크기·재료·가격·노트 대기 중.
       {
         image: seoHyeonJeonWork03,
-        title: null,
-        year: null,
-        size: null,
-        medium: null,
-        price: null,
-        note: [],
+        title: '어월',
+        year: '2024',
+        size: '72.7x53.0cm',
+        medium: 'Acrylic on canvas',
+        price: 2000000,
+        note: [
+          "현대 국어 '응어리'의 옛말 '어월'은 16세기 문헌에서부터 나타난다. '어월'에 접사 '-이'가 결합하면 '어워리'가 되는데 어중에 종성 '○'을 첨가하면 '엉워리'가 될 수 있다. '엉워리'는 제2음절의 이중 모음이 단모음으로 단순화하여 '엉어리'가 될 수 있는데 이 '엉어리'가 19세기 문헌에 나타난다. 중간 단계인 '어워리'와 '엉워리'는 문헌에서 찾기 힘들다. 그러므로 먼저 '어워리'가 '어어리'가 되고 '엉어리'로 변화하였다고 설명하는 것이 가능하다. 20세기 이후어 제1음절의 모음이 어 '에서 '-'로 바뀐 것은 일종의 이화라 할 수 있을 것이다. 20세기 이후에 나타난 '응어리'는 현재에 이어지게 되었다.",
+          '저도 모르겠습니다. 눈에서 눈물이 하염없이 흘러 또다른 나에게로 연결됩니다. 눈물의 모양이 마음의 모양처럼 이리저리 변하는데 무엇이 진짜 나 자신인지 헷갈립니다. 마음이 쓰라려 참고 견뎌야 하니 속만 미어집니다. 이것이 응어리가 되어 결국 내가 됩니다.',
+        ],
       },
     ],
   },
@@ -633,6 +635,26 @@ const ROOMS = [
 ]
 
 /**
+ * 소개글·작품 노트 공용 본문.
+ *
+ * 첫 문단이 짧으면 스테이트먼트로 읽히니 크게 세우고, 인용문처럼 긴 글이
+ * 먼저 오면 본문 톤 그대로 둔다. 큰 활자로 400자를 깔면 읽히지 않는다.
+ */
+const LEAD_MAX = 120
+
+function Prose({ paragraphs }: { paragraphs: string[] }) {
+  return (
+    <div className="fig-detail-intro">
+      {paragraphs.map((p, i) => (
+        <p key={p} className={i === 0 && p.length <= LEAD_MAX ? 'is-lead' : ''}>
+          {p}
+        </p>
+      ))}
+    </div>
+  )
+}
+
+/**
  * 카드 이미지 자리. 사진이 없는 아티스트는 기존 플레이스홀더 그라데이션이
  * 그대로 보이므로, 사진이 들어오는 대로 photo 만 채워주면 된다.
  */
@@ -721,13 +743,7 @@ function ArtistDetailPage({
           <h1 className="fig-detail-name">{artist.name}</h1>
           <span className="fig-detail-role">{artist.role}</span>
 
-          {artist.intro.length > 0 && (
-            <div className="fig-detail-intro">
-              {artist.intro.map((p) => (
-                <p key={p}>{p}</p>
-              ))}
-            </div>
-          )}
+          {artist.intro.length > 0 && <Prose paragraphs={artist.intro} />}
 
           {artist.instagram && (
             <a
@@ -844,13 +860,7 @@ function WorkDetailPage({
 
           <p className="fig-work-notice">※ {IMAGE_NOTICE}</p>
 
-          {work.note.length > 0 && (
-            <div className="fig-detail-intro">
-              {work.note.map((p) => (
-                <p key={p}>{p}</p>
-              ))}
-            </div>
-          )}
+          {work.note.length > 0 && <Prose paragraphs={work.note} />}
 
           {artist.instagram && (
             <a

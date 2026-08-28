@@ -587,8 +587,8 @@
   white-space: pre-line;
 }
 
-/* 첫 문단은 스테이트먼트라 한 단계 크고 밝게. */
-.fig-detail-intro p:first-child {
+/* 스테이트먼트로 세우는 문단만 한 단계 크고 밝게 (Prose 가 판단). */
+.fig-detail-intro p.is-lead {
   font-size: clamp(17px, 1.45vw, 21px);
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.92);
