@@ -3033,6 +3033,100 @@
   line-height: 1;
 }
 
+/* ── 모바일 메뉴 — 햄버거 + 오른쪽 서랍 ──────────────────────────
+   좁은 화면에선 .nav-menu 가 숨으므로 같은 항목을 서랍으로 낸다. */
+.nav-burger {
+  display: none;
+}
+
+.nav-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.nav-drawer-backdrop.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.nav-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 95;
+  width: min(78vw, 320px);
+  box-sizing: border-box;
+  padding: 20px 28px 40px;
+  background: #000000;
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.38s ease;
+}
+
+.nav-drawer.is-open {
+  transform: none;
+  visibility: visible;
+}
+
+.nav-drawer-close {
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-right: -8px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+}
+
+.nav-drawer-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+}
+
+.nav-drawer-link {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 18px 0;
+  text-align: left;
+  /* 데스크톱 네비와 같은 시안 폰트 */
+  font-family: var(--fig-display, 'Island Moments', Georgia, serif);
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.nav-drawer-link:hover,
+.nav-drawer-link:active {
+  color: #ffffff;
+}
+
 @media (max-width: 768px) {
   .global-nav {
     padding: 14px 20px;
@@ -3041,9 +3135,21 @@
   .nav-menu {
     display: none;
   }
+  .nav-burger {
+    display: inline-flex;
+  }
   .nav-logo img {
     height: 44px;
     margin: -11px 0;
+  }
+}
+
+/* 데스크톱에선 햄버거가 없으니 서랍도 존재할 이유가 없다.
+   모바일에서 열어둔 채 창을 넓혀도 남지 않도록 잘라낸다. */
+@media (min-width: 769px) {
+  .nav-drawer,
+  .nav-drawer-backdrop {
+    display: none;
   }
 }
 

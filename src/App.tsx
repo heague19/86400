@@ -1315,7 +1315,40 @@ function GlobalNav({
   onArtistClick: () => void
   onProductClick: () => void
 }) {
+  // 좁은 화면에선 메뉴가 숨겨지므로 오른쪽에서 나오는 서랍으로 대신한다.
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [menuOpen])
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [menuOpen])
+
+  const navigate = (go: () => void) => {
+    go()
+    setMenuOpen(false)
+  }
+
+  const menu = [
+    { label: 'Brand', go: onStoryClick },
+    { label: 'Artist', go: onArtistClick },
+    { label: 'Product', go: onProductClick },
+  ]
+
   return (
+    <>
     <nav
       className={`global-nav ${dark ? 'is-dark' : ''} ${
         solid ? 'fig-nav-solid' : ''
@@ -1332,21 +1365,13 @@ function GlobalNav({
       </button>
       {/* 시안 Frame 768: Brand · Artist · Product */}
       <ul className="nav-menu">
-        <li>
-          <button type="button" className="nav-link" onClick={onStoryClick}>
-            Brand
-          </button>
-        </li>
-        <li>
-          <button type="button" className="nav-link" onClick={onArtistClick}>
-            Artist
-          </button>
-        </li>
-        <li>
-          <button type="button" className="nav-link" onClick={onProductClick}>
-            Product
-          </button>
-        </li>
+        {menu.map((m) => (
+          <li key={m.label}>
+            <button type="button" className="nav-link" onClick={m.go}>
+              {m.label}
+            </button>
+          </li>
+        ))}
       </ul>
       <div className="nav-actions">
         <button type="button" className="nav-icon" aria-label="Search">
@@ -1369,8 +1394,60 @@ function GlobalNav({
           </svg>
           <span className="nav-cart-count">0</span>
         </button>
+        <button
+          type="button"
+          className="nav-icon nav-burger"
+          aria-label="Menu"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen(true)}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
       </div>
     </nav>
+
+    <div
+      className={`nav-drawer-backdrop ${menuOpen ? 'is-open' : ''}`}
+      onClick={() => setMenuOpen(false)}
+      aria-hidden="true"
+    />
+    {/* 닫혀 있을 땐 visibility:hidden 이라 탭 순서에서도 빠진다. */}
+    <aside
+      className={`nav-drawer ${menuOpen ? 'is-open' : ''}`}
+      aria-label="Menu"
+      aria-hidden={!menuOpen}
+    >
+      <button
+        type="button"
+        className="nav-drawer-close"
+        onClick={() => setMenuOpen(false)}
+        aria-label="Close menu"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+          <line x1="5" y1="5" x2="19" y2="19" />
+          <line x1="19" y1="5" x2="5" y2="19" />
+        </svg>
+      </button>
+
+      <ul className="nav-drawer-menu">
+        {menu.map((m) => (
+          <li key={m.label}>
+            <button
+              type="button"
+              className="nav-drawer-link"
+              onClick={() => navigate(m.go)}
+            >
+              {m.label}
+            </button>
+          </li>
+        ))}
+      </ul>
+    </aside>
+    </>
   )
 }
 
