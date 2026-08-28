@@ -35,10 +35,17 @@ const SEASON_ARTISTS = [
   { role: 'Toy', name: 'Juhwan Cheon' },
 ]
 
+/**
+ * COMING SOON 랜딩(시계 화면) 스위치.
+ * false 면 진입 즉시 MAIN 으로 들어가고 좌상단 토글도 숨긴다.
+ * 다시 열려면 이 값만 true 로 되돌리면 된다.
+ */
+const COMING_SOON = false
+
 function App() {
   const ticks = Array.from({ length: 12 }, (_, i) => i)
   const [now, setNow] = useState(new Date())
-  const [opened, setOpened] = useState(false)
+  const [opened, setOpened] = useState(!COMING_SOON)
   const [page, setPage] = useState<Page>('collection')
   const [selectedProduct, setSelectedProduct] = useState<number | null>(null)
   const [selectedArtist, setSelectedArtist] = useState<number | null>(null)
@@ -85,24 +92,26 @@ function App() {
 
   return (
     <div className="layout">
-      <button
-        type="button"
-        className={`mode-toggle ${opened ? 'is-open' : ''} ${
-          darkNav ? 'is-on-dark-nav' : ''
-        }`}
-        onClick={() => {
-          setOpened((v) => !v)
-          goCollection()
-        }}
-        aria-label={opened ? 'Close main page' : 'Open main page'}
-      >
-        <span className="mode-toggle-track">
-          <span className="mode-toggle-thumb" />
-        </span>
-        <span className="mode-toggle-label">
-          {opened ? 'MAIN' : 'COMING SOON'}
-        </span>
-      </button>
+      {COMING_SOON && (
+        <button
+          type="button"
+          className={`mode-toggle ${opened ? 'is-open' : ''} ${
+            darkNav ? 'is-on-dark-nav' : ''
+          }`}
+          onClick={() => {
+            setOpened((v) => !v)
+            goCollection()
+          }}
+          aria-label={opened ? 'Close main page' : 'Open main page'}
+        >
+          <span className="mode-toggle-track">
+            <span className="mode-toggle-thumb" />
+          </span>
+          <span className="mode-toggle-label">
+            {opened ? 'MAIN' : 'COMING SOON'}
+          </span>
+        </button>
+      )}
 
       {!opened ? (
         <section className="top">
