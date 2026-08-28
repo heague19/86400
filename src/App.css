@@ -348,12 +348,26 @@
   pointer-events: none;
 }
 
+/* 위 광택은 빈 카드를 채우려고 둔 것이라 실제 사진 위에서는 얼굴을 날린다. */
+.fig-card-frame:has(.fig-card-media img)::after {
+  display: none;
+}
+
 /* 실제 이미지로 교체하기 전까지의 플레이스홀더 */
 .fig-card-media {
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, #f0f0f0 0%, #d8d8d8 100%);
   transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 526×567 세로 카드라 원본 비율(세로 1536×2730 / 정사각 1920)은 잘라서 채운다. */
+.fig-card-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
 }
 
 .fig-card:hover .fig-card-media {

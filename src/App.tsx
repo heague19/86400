@@ -3,6 +3,10 @@ import './App.css'
 // 워드마크 대신 쓰는 로고. 배경색에 맞춰 둘 중 하나를 고른다.
 import logoWhite from './assets/86400white.png'
 import logoBlack from './assets/86400black.png'
+// 원본(6.8MB PNG / 1.9K 정사각)은 리포 루트에 그대로 두고, 카드 크기에 맞춰
+// 줄인 웹용 사본만 번들에 넣는다.
+import victorLeePhoto from './assets/VictorLeeProfile.jpg'
+import seoHyeonJeonPhoto from './assets/SeoHyeonJeonProfile.jpg'
 
 type Page =
   | 'collection'
@@ -32,10 +36,11 @@ const TEAM = [
 ]
 
 // 시안(Figma) 'New Season Artist' 3인 — 캡션은 "역할 + 이름" 순.
+// photo 가 없는 아티스트는 카드가 기존 플레이스홀더로 남는다.
 const SEASON_ARTISTS = [
-  { role: 'paint', name: 'Victor Lee' },
-  { role: 'Designer', name: 'SeoJeon Hyuen' },
-  { role: 'Toy', name: 'Juhwan Cheon' },
+  { role: 'paint', name: 'Victor Lee', photo: victorLeePhoto },
+  { role: 'Designer', name: 'SeoJeon Hyuen', photo: seoHyeonJeonPhoto },
+  { role: 'Toy', name: 'Juhwan Cheon', photo: null },
 ]
 
 /**
@@ -190,7 +195,7 @@ function App() {
                   {SEASON_ARTISTS.map((a, i) => (
                     <article key={a.name} className="fig-card">
                       <div className="fig-card-frame">
-                        <div className="fig-card-media" />
+                        <CardMedia photo={a.photo} alt={a.name} />
                         <span className="fig-card-index">
                           No.{String(i + 1).padStart(2, '0')}
                         </span>
@@ -498,10 +503,22 @@ const ROOMS = [
  * 좌표상 역할은 앞 카드 이름 뒤에 붙는다.
  */
 const ARTIST_ROW = [
-  { name: 'Artist Victor Lee', role: 'paint' },
-  { name: 'SeoJeon Hyuen', role: 'paint' },
-  { name: 'Juhwan Cheon', role: 'Toy' },
+  { name: 'Artist Victor Lee', role: 'paint', photo: victorLeePhoto },
+  { name: 'SeoJeon Hyuen', role: 'paint', photo: seoHyeonJeonPhoto },
+  { name: 'Juhwan Cheon', role: 'Toy', photo: null },
 ]
+
+/**
+ * 카드 이미지 자리. 사진이 없는 아티스트는 기존 플레이스홀더 그라데이션이
+ * 그대로 보이므로, 사진이 들어오는 대로 photo 만 채워주면 된다.
+ */
+function CardMedia({ photo, alt }: { photo: string | null; alt: string }) {
+  return (
+    <div className="fig-card-media">
+      {photo && <img src={photo} alt={alt} />}
+    </div>
+  )
+}
 
 function ArtistPage({
   onOpenExhibition,
@@ -526,7 +543,7 @@ function ArtistPage({
                 onClick={() => onOpenArtist(i)}
               >
                 <div className="fig-card-frame">
-                  <div className="fig-card-media" />
+                  <CardMedia photo={a.photo} alt={a.name} />
                   <span className="fig-card-index">
                     No.{String(row * 3 + i + 1).padStart(2, '0')}
                   </span>
@@ -574,7 +591,7 @@ function ArtistDetailPage({
 
       <div className="fig-detail-body">
         <div className="fig-card-frame fig-detail-frame">
-          <div className="fig-card-media" />
+          <CardMedia photo={artist.photo} alt={artist.name} />
         </div>
 
         <div className="fig-detail-info">
