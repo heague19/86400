@@ -84,14 +84,9 @@ function App() {
     setDetailTab('director')
   }
 
-  // 시안 페이지들은 네비가 검정 — 토글이 그 위에 겹치므로 색을 맞춰줘야 한다.
-  const darkNav =
-    opened &&
-    (page === 'collection' ||
-      page === 'artist' ||
-      page === 'artistDetail' ||
-      page === 'product' ||
-      page === 'detail')
+  // 본문이 검정인 페이지는 전부 검은 네비를 쓴다. 흰 본문은 Voices 뿐이라
+  // 그 한 장만 밝은 스킨으로 빠진다.
+  const darkNav = opened && page !== 'voices'
 
   return (
     <div className="layout">
