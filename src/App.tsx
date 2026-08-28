@@ -527,36 +527,33 @@ function ArtistPage({
   onOpenExhibition: () => void
   onOpenArtist: (index: number) => void
 }) {
-  // 시안은 동일한 행이 3번 반복된다. 실제 데이터가 붙으면 이 배열만 갈아끼우면 된다.
-  const rows = [0, 1, 2]
-
+  // 시안은 같은 행을 3번 반복하지만 실제 아티스트는 3명뿐이라 한 행만 그린다.
+  // 사람이 늘어나면 ARTIST_ROW 에 추가하는 것만으로 다음 줄이 채워진다.
   return (
     <section className="fig-main fig-artist-page">
-      {rows.map((row) => (
-        <div key={row} className="fig-artist-row">
-          <div className="fig-grid">
-            {ARTIST_ROW.map((a, i) => (
-              <button
-                key={`${row}-${a.name}`}
-                type="button"
-                className="fig-card"
-                onClick={() => onOpenArtist(i)}
-              >
-                <div className="fig-card-frame">
-                  <CardMedia photo={a.photo} alt={a.name} />
-                  <span className="fig-card-index">
-                    No.{String(row * 3 + i + 1).padStart(2, '0')}
-                  </span>
-                </div>
-                <div className="fig-card-caption">
-                  <span className="fig-card-name">{a.name}</span>
-                  <span className="fig-card-role">{a.role}</span>
-                </div>
-              </button>
-            ))}
-          </div>
+      <div className="fig-artist-row">
+        <div className="fig-grid">
+          {ARTIST_ROW.map((a, i) => (
+            <button
+              key={a.name}
+              type="button"
+              className="fig-card"
+              onClick={() => onOpenArtist(i)}
+            >
+              <div className="fig-card-frame">
+                <CardMedia photo={a.photo} alt={a.name} />
+                <span className="fig-card-index">
+                  No.{String(i + 1).padStart(2, '0')}
+                </span>
+              </div>
+              <div className="fig-card-caption">
+                <span className="fig-card-name">{a.name}</span>
+                <span className="fig-card-role">{a.role}</span>
+              </div>
+            </button>
+          ))}
         </div>
-      ))}
+      </div>
 
       {/* 시안 네비가 3개(Brand·Artist·Product)로 줄면서 Exhibition 이 진입점을
           잃어 여기에 남겨둔다. 시안엔 없는 요소라 조용한 텍스트 링크로. */}
