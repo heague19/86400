@@ -8,7 +8,7 @@ import logoBlack from './assets/86400black.png'
 import victorLeePhoto from './assets/VictorLeeProfile.jpg'
 import seoHyeonJeonPhoto from './assets/SeoHyeonJeonProfile.jpg'
 import juhwanCheonPhoto from './assets/JuhwanCheonProfile.jpg'
-import seoJeonHyuenWork01 from './assets/SeoJeonHyuen-Work01.jpg'
+import seoHyeonJeonWork01 from './assets/SeoHyeonJeon-Work01.jpg'
 
 type Page =
   | 'collection'
@@ -43,7 +43,7 @@ const TEAM = [
  *
  * 시안 구조: 카드 3장 + 캡션 한 줄(Group 572)이 top 344 / 1052 / 1769 로
  * 세 번 반복된다(708px 피치). 캡션은 카드마다 "이름 + 역할" 이 번갈아
- * 놓이는데(Victor Lee · paint / SeoJeon Hyuen · paint / Juhwan Cheon · Toy),
+ * 놓이는데(Victor Lee · paint / SeoHyeon Jeon · paint / Juhwan Cheon · Toy),
  * 좌표상 역할은 앞 카드 이름 뒤에 붙는다.
  */
 type Work = {
@@ -53,9 +53,15 @@ type Work = {
   /** 작가가 준 표기 그대로 둔다. */
   size: string
   medium: string
+  /** 원(KRW). 표시할 때 천 단위 구분자를 붙인다. */
+  price: number
   /** 작품 노트. 첫 문단이 크게 나간다. */
   note: string[]
 }
+
+/** 실물과 화면은 같을 수 없으니 작품 상세마다 같은 문구로 알린다. */
+const IMAGE_NOTICE =
+  '실제 작품은 촬영 조건과 화면 환경에 따라 이미지와 다르게 보일 수 있습니다.'
 
 type Artist = {
   name: string
@@ -78,7 +84,7 @@ const ARTIST_ROW: Artist[] = [
     works: [],
   },
   {
-    name: 'SeoJeon Hyuen',
+    name: 'SeoHyeon Jeon',
     role: 'paint',
     photo: seoHyeonJeonPhoto,
     intro: [
@@ -88,11 +94,12 @@ const ARTIST_ROW: Artist[] = [
     instagram: 'i_m_i.v___y',
     works: [
       {
-        image: seoJeonHyuenWork01,
+        image: seoHyeonJeonWork01,
         title: '녹차라떼 먹추가',
         year: '2024',
         size: '54x39cm',
         medium: 'In a korea paper, ink and light color',
+        price: 800000,
         note: [
           '진정하기 위해 녹차를 마십니다. 집중하기 위해 카페인이 있는 걸로요. 아. 조금더 추가할까요? 먹??',
           '좋아하는 색감과 터치, 그리고 얹었을 때 모든 박자가 완벽히 맞을 만한 장지에 그림을 그렸습니다. 드로잉처럼 손이 가는데로요. 연구작이으로 시작했지만 앞으로 저의 작업에 도움이 될 순간이였습니다. 기분이 좋아여><',
@@ -115,7 +122,7 @@ const ARTIST_ROW: Artist[] = [
 // 사진과 상세 페이지 연결은 ARTIST_ROW 한 곳에서 끌어온다.
 const SEASON_ARTISTS = [
   { role: 'paint', name: 'Victor Lee', artist: ARTIST_ROW[0] },
-  { role: 'Designer', name: 'SeoJeon Hyuen', artist: ARTIST_ROW[1] },
+  { role: 'Designer', name: 'SeoHyeon Jeon', artist: ARTIST_ROW[1] },
   { role: 'Toy', name: 'Juhwan Cheon', artist: ARTIST_ROW[2] },
 ]
 
@@ -778,7 +785,15 @@ function WorkDetailPage({
               <dt>Artist</dt>
               <dd>{artist.name}</dd>
             </div>
+            <div>
+              <dt>Price</dt>
+              <dd className="is-price">
+                ₩ {work.price.toLocaleString('ko-KR')}
+              </dd>
+            </div>
           </dl>
+
+          <p className="fig-work-notice">※ {IMAGE_NOTICE}</p>
 
           {work.note.length > 0 && (
             <div className="fig-detail-intro">

@@ -547,6 +547,25 @@
   word-break: keep-all;
 }
 
+.fig-work-spec dd.is-price {
+  font-size: clamp(15px, 1.2vw, 18px);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 구매 판단에 걸리는 고지라 노트보다 앞에 두되 톤은 낮춘다. */
+.fig-work-notice {
+  margin: 16px 0 0;
+  max-width: 46ch;
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(12px, 0.85vw, 13px);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.45);
+  word-break: keep-all;
+}
+
 .fig-detail-intro {
   display: flex;
   flex-direction: column;
