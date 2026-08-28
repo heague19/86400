@@ -49,6 +49,8 @@ type Artist = {
   name: string
   role: string
   photo: string | null
+  /** 상세 페이지 소개글. 첫 문단이 스테이트먼트로 크게 나간다. */
+  intro: string[]
   /** 인스타 핸들. @ 없이 저장하고 표시할 때 붙인다. */
   instagram: string | null
   works: string[]
@@ -59,6 +61,7 @@ const ARTIST_ROW: Artist[] = [
     name: 'Artist Victor Lee',
     role: 'paint',
     photo: victorLeePhoto,
+    intro: [],
     instagram: null,
     works: [],
   },
@@ -66,6 +69,10 @@ const ARTIST_ROW: Artist[] = [
     name: 'SeoJeon Hyuen',
     role: 'paint',
     photo: seoHyeonJeonPhoto,
+    intro: [
+      '촘촘히 준비하다보면 설렘이 두려움을 압도합니다_',
+      '저는 결국 예술이란 우리의 감정과 생각을 형상화하는 과정이고 이를 표현하고 공감받을 때 진정한 가치가 있다고 생각합니다.',
+    ],
     instagram: 'i_m_i.v___y',
     works: [seoJeonHyuenWork01],
   },
@@ -73,6 +80,7 @@ const ARTIST_ROW: Artist[] = [
     name: 'Juhwan Cheon',
     role: 'Toy',
     photo: juhwanCheonPhoto,
+    intro: [],
     instagram: null,
     works: [],
   },
@@ -629,6 +637,15 @@ function ArtistDetailPage({
         <div className="fig-detail-info">
           <h1 className="fig-detail-name">{artist.name}</h1>
           <span className="fig-detail-role">{artist.role}</span>
+
+          {artist.intro.length > 0 && (
+            <div className="fig-detail-intro">
+              {artist.intro.map((p) => (
+                <p key={p}>{p}</p>
+              ))}
+            </div>
+          )}
+
           {artist.instagram && (
             <a
               className="fig-detail-handle"
