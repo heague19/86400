@@ -263,12 +263,13 @@
 }
 
 .fig-hero-logo {
-  width: min(680px, 62vw);
-  aspect-ratio: 680 / 408;
+  /* 로고 PNG 는 512 정사각 캔버스에 마크가 가로 96% · 세로 55% 로 앉아 있다.
+     시안의 마크 폭 680px 을 맞추려면 캔버스를 710px 로 잡으면 된다. */
+  width: min(710px, 66vw, 68svh);
+  aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* 실제 86400-logo.png 로 교체 지점 — background-image 만 바꾸면 된다. */
   background: radial-gradient(
     ellipse at 50% 50%,
     rgba(255, 255, 255, 0.06) 0%,
@@ -277,21 +278,19 @@
 }
 
 .fig-hero-wordmark {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-  font-size: clamp(64px, 11vw, 200px);
-  font-weight: 900;
-  font-style: italic;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  color: rgba(255, 255, 255, 0.9);
+  width: 100%;
   margin: 0;
-  font-variant-numeric: tabular-nums;
-  text-shadow:
-    0 0 24px rgba(255, 255, 255, 0.55),
-    0 0 72px rgba(255, 255, 255, 0.35),
-    0 0 160px rgba(255, 255, 255, 0.2);
-  -webkit-text-stroke: 2px #ffffff;
-  paint-order: stroke fill;
+  line-height: 0;
+}
+
+.fig-hero-wordmark img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* 워드마크에 있던 글로우를 마크 실루엣 그대로 옮긴다. */
+  filter:
+    drop-shadow(0 0 24px rgba(255, 255, 255, 0.4))
+    drop-shadow(0 0 80px rgba(255, 255, 255, 0.22));
 }
 
 /* ── 섹션 공통 — 시안의 128px 헤딩 ── */
@@ -2274,24 +2273,20 @@
 }
 
 .story-title {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-  font-size: clamp(120px, 18vw, 240px);
-  font-weight: 900;
-  line-height: 0.95;
-  letter-spacing: -6px;
+  width: min(700px, 62vw);
   margin: 0 0 24px;
-  color: rgba(255, 255, 255, 0.85);
-  font-variant-numeric: tabular-nums;
-  font-style: italic;
-  text-transform: uppercase;
-  text-shadow:
-    0 0 24px rgba(255, 255, 255, 0.65),
-    0 0 72px rgba(255, 255, 255, 0.45),
-    0 0 144px rgba(255, 255, 255, 0.3),
-    0 0 240px rgba(255, 255, 255, 0.18);
-  filter: blur(2.4px);
-  -webkit-text-stroke: 2.5px #ffffff;
-  paint-order: stroke fill;
+  line-height: 0;
+}
+
+.story-title img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* 워드마크의 번지는 글로우를 마크 실루엣으로 대체. */
+  filter:
+    drop-shadow(0 0 24px rgba(255, 255, 255, 0.5))
+    drop-shadow(0 0 90px rgba(255, 255, 255, 0.3))
+    drop-shadow(0 0 200px rgba(255, 255, 255, 0.18));
 }
 
 .story-subtitle {
@@ -2893,12 +2888,18 @@
   background: transparent;
   border: none;
   padding: 0;
-  font-size: 20px;
-  font-weight: 900;
-  letter-spacing: 4px;
-  color: #111;
   cursor: pointer;
   flex-shrink: 0;
+  line-height: 0;
+}
+
+/* 캔버스의 위아래 여백(45%)까지 세면 바가 그만큼 두꺼워지므로,
+   여백만큼 음수 마진으로 되돌려 기존 네비 높이를 유지한다. */
+.nav-logo img {
+  display: block;
+  height: 52px;
+  width: auto;
+  margin: -13px 0;
 }
 
 .nav-menu {
@@ -2994,9 +2995,9 @@
   .nav-menu {
     display: none;
   }
-  .nav-logo {
-    font-size: 18px;
-    letter-spacing: 3px;
+  .nav-logo img {
+    height: 44px;
+    margin: -11px 0;
   }
 }
 
@@ -3024,11 +3025,16 @@
 }
 
 .footer-logo {
-  font-size: 32px;
-  font-weight: 900;
-  letter-spacing: 4px;
-  color: #ffffff;
   margin: 0;
+  line-height: 0;
+}
+
+.footer-logo img {
+  display: block;
+  width: 160px;
+  height: auto;
+  /* 캔버스 위아래 여백만큼 당겨 태그라인과의 간격을 텍스트 때와 맞춘다. */
+  margin: -36px 0;
 }
 
 .footer-tagline {

@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
+// 워드마크 대신 쓰는 로고. 배경색에 맞춰 둘 중 하나를 고른다.
+import logoWhite from './assets/86400white.png'
+import logoBlack from './assets/86400black.png'
 
 type Page =
   | 'collection'
@@ -179,7 +182,9 @@ function App() {
               {/* 시안: 로고 680×408 중앙 정렬 */}
               <div className="fig-hero">
                 <div className="fig-hero-logo">
-                  <h1 className="fig-hero-wordmark">86400</h1>
+                  <h1 className="fig-hero-wordmark">
+                    <img src={logoWhite} alt="86400" />
+                  </h1>
                 </div>
               </div>
 
@@ -1015,7 +1020,7 @@ function StoryPage() {
     <section className="story-page">
       <header className="story-hero">
         <h1 className="story-title">
-          86400
+          <img src={logoWhite} alt="86400" />
         </h1>
         <p className="story-subtitle">Find Your, Lead Future</p>
 
@@ -1247,7 +1252,8 @@ function GlobalNav({
         onClick={onLogoClick}
         aria-label="Home"
       >
-        86400
+        {/* 네비는 밝은 스킨/어두운 스킨 두 가지라 로고도 같이 반전시킨다. */}
+        <img src={dark || solid ? logoWhite : logoBlack} alt="86400" />
       </button>
       {/* 시안 Frame 768: Brand · Artist · Product */}
       <ul className="nav-menu">
@@ -1299,7 +1305,9 @@ function Footer() {
     <footer className="site-footer">
       <div className="footer-inner">
         <div className="footer-brand">
-          <h2 className="footer-logo">86400</h2>
+          <h2 className="footer-logo">
+            <img src={logoWhite} alt="86400" />
+          </h2>
           <p className="footer-tagline">
             불확실한 미래에 확실한 나를 보여주는
           </p>
