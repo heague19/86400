@@ -7,6 +7,7 @@ import logoBlack from './assets/86400black.png'
 // 줄인 웹용 사본만 번들에 넣는다.
 import victorLeePhoto from './assets/VictorLeeProfile.jpg'
 import seoHyeonJeonPhoto from './assets/SeoHyeonJeonProfile.jpg'
+import juhwanCheonPhoto from './assets/JuhwanCheonProfile.jpg'
 import seoJeonHyuenWork01 from './assets/SeoJeonHyuen-Work01.jpg'
 
 type Page =
@@ -41,7 +42,7 @@ const TEAM = [
 const SEASON_ARTISTS = [
   { role: 'paint', name: 'Victor Lee', photo: victorLeePhoto },
   { role: 'Designer', name: 'SeoJeon Hyuen', photo: seoHyeonJeonPhoto },
-  { role: 'Toy', name: 'Juhwan Cheon', photo: null },
+  { role: 'Toy', name: 'Juhwan Cheon', photo: juhwanCheonPhoto },
 ]
 
 /**
@@ -530,7 +531,7 @@ const ARTIST_ROW: Artist[] = [
   {
     name: 'Juhwan Cheon',
     role: 'Toy',
-    photo: null,
+    photo: juhwanCheonPhoto,
     instagram: null,
     works: [],
   },
