@@ -560,7 +560,8 @@
 }
 
 /* 인물 사진은 얼굴이 위쪽에 있어 22% 로 당겨두지만 작품은 가운데가 맞다. */
-.fig-detail-works .fig-card-media img {
+.fig-detail-works .fig-card-media img,
+.fig-work-detail .fig-card-media img {
   object-position: center;
 }
 

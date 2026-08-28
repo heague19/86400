@@ -18,6 +18,7 @@ type Page =
   | 'exhibition'
   | 'artist'
   | 'artistDetail'
+  | 'workDetail'
   | 'product'
 
 const TEAM = [
@@ -109,6 +110,7 @@ function App() {
   const [page, setPage] = useState<Page>('collection')
   const [selectedProduct, setSelectedProduct] = useState<number | null>(null)
   const [selectedArtist, setSelectedArtist] = useState<number | null>(null)
+  const [selectedWork, setSelectedWork] = useState<number | null>(null)
   const [detailTab, setDetailTab] = useState<'product' | 'director'>('director')
 
   useEffect(() => {
@@ -130,6 +132,15 @@ function App() {
   }
   const openArtist = (i: number) => {
     setSelectedArtist(i)
+    setSelectedWork(null)
+    setPage('artistDetail')
+  }
+  const openWork = (i: number) => {
+    setSelectedWork(i)
+    setPage('workDetail')
+  }
+  const backToArtist = () => {
+    setSelectedWork(null)
     setPage('artistDetail')
   }
   const goProduct = () => setPage('product')
@@ -308,8 +319,19 @@ function App() {
             <ArtistDetailPage
               artist={ARTIST_ROW[selectedArtist]}
               onBack={goArtist}
+              onOpenWork={openWork}
             />
           )}
+
+          {page === 'workDetail' &&
+            selectedArtist !== null &&
+            selectedWork !== null && (
+              <WorkDetailPage
+                artist={ARTIST_ROW[selectedArtist]}
+                index={selectedWork}
+                onBack={backToArtist}
+              />
+            )}
 
           {page === 'voices' && <VoicesPage />}
 
@@ -619,9 +641,11 @@ function ArtistPage({
 function ArtistDetailPage({
   artist,
   onBack,
+  onOpenWork,
 }: {
   artist: Artist
   onBack: () => void
+  onOpenWork: (index: number) => void
 }) {
   return (
     <section className="fig-main fig-artist-detail">
@@ -664,7 +688,12 @@ function ArtistDetailPage({
           <h2 className="fig-section-title">Works</h2>
           <div className="fig-grid">
             {artist.works.map((work, i) => (
-              <article key={work} className="fig-card">
+              <button
+                key={work}
+                type="button"
+                className="fig-card"
+                onClick={() => onOpenWork(i)}
+              >
                 <div className="fig-card-frame">
                   <CardMedia
                     photo={work}
@@ -674,11 +703,60 @@ function ArtistDetailPage({
                     No.{String(i + 1).padStart(2, '0')}
                   </span>
                 </div>
-              </article>
+              </button>
             ))}
           </div>
         </div>
       )}
+    </section>
+  )
+}
+
+/**
+ * 작품 상세 — Artist 상세와 같은 레이아웃(왼쪽 526 프레임 + 오른쪽 정보).
+ * 작품에 붙은 제목·연도 데이터가 아직 없어 넘버링과 작가 이름만 세운다.
+ */
+function WorkDetailPage({
+  artist,
+  index,
+  onBack,
+}: {
+  artist: Artist
+  index: number
+  onBack: () => void
+}) {
+  const no = `No.${String(index + 1).padStart(2, '0')}`
+
+  return (
+    <section className="fig-main fig-artist-detail fig-work-detail">
+      <button type="button" className="fig-detail-back" onClick={onBack}>
+        ← {artist.name}
+      </button>
+
+      <div className="fig-detail-body">
+        <div className="fig-card-frame fig-detail-frame">
+          <CardMedia
+            photo={artist.works[index]}
+            alt={`${artist.name} — Work ${index + 1}`}
+          />
+        </div>
+
+        <div className="fig-detail-info">
+          <h1 className="fig-detail-name">{no}</h1>
+          <span className="fig-detail-role">{artist.name}</span>
+
+          {artist.instagram && (
+            <a
+              className="fig-detail-handle"
+              href={`https://www.instagram.com/${artist.instagram}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              @{artist.instagram}
+            </a>
+          )}
+        </div>
+      </div>
     </section>
   )
 }
