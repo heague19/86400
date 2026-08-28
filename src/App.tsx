@@ -9,6 +9,8 @@ import victorLeePhoto from './assets/VictorLeeProfile.jpg'
 import seoHyeonJeonPhoto from './assets/SeoHyeonJeonProfile.jpg'
 import juhwanCheonPhoto from './assets/JuhwanCheonProfile.jpg'
 import seoHyeonJeonWork01 from './assets/SeoHyeonJeon-Work01.jpg'
+import seoHyeonJeonWork02 from './assets/SeoHyeonJeon-Work02.jpg'
+import seoHyeonJeonWork03 from './assets/SeoHyeonJeon-Work03.jpg'
 
 type Page =
   | 'collection'
@@ -46,15 +48,19 @@ const TEAM = [
  * 놓이는데(Victor Lee · paint / SeoHyeon Jeon · paint / Juhwan Cheon · Toy),
  * 좌표상 역할은 앞 카드 이름 뒤에 붙는다.
  */
+/**
+ * 이미지 말고는 전부 선택 항목이다. 아직 안 받은 정보를 지어내지 않고
+ * 비워둘 수 있게 두되, 채워지는 대로 상세 페이지에 그대로 붙는다.
+ */
 type Work = {
   image: string
-  title: string
-  year: string
+  title: string | null
+  year: string | null
   /** 작가가 준 표기 그대로 둔다. */
-  size: string
-  medium: string
+  size: string | null
+  medium: string | null
   /** 원(KRW). 표시할 때 천 단위 구분자를 붙인다. */
-  price: number
+  price: number | null
   /** 작품 노트. 첫 문단이 크게 나간다. */
   note: string[]
 }
@@ -104,6 +110,25 @@ const ARTIST_ROW: Artist[] = [
           '진정하기 위해 녹차를 마십니다. 집중하기 위해 카페인이 있는 걸로요. 아. 조금더 추가할까요? 먹??',
           '좋아하는 색감과 터치, 그리고 얹었을 때 모든 박자가 완벽히 맞을 만한 장지에 그림을 그렸습니다. 드로잉처럼 손이 가는데로요. 연구작이으로 시작했지만 앞으로 저의 작업에 도움이 될 순간이였습니다. 기분이 좋아여><',
         ],
+      },
+      // 아래 두 점은 이미지만 받은 상태 — 제목·크기·재료·가격·노트 대기 중.
+      {
+        image: seoHyeonJeonWork02,
+        title: null,
+        year: null,
+        size: null,
+        medium: null,
+        price: null,
+        note: [],
+      },
+      {
+        image: seoHyeonJeonWork03,
+        title: null,
+        year: null,
+        size: null,
+        medium: null,
+        price: null,
+        note: [],
       },
     ],
   },
@@ -719,21 +744,30 @@ function ArtistDetailPage({
           <div className="fig-grid">
             {artist.works.map((work, i) => (
               <button
-                key={work.title}
+                key={work.image}
                 type="button"
                 className="fig-card"
                 onClick={() => onOpenWork(i)}
               >
                 <div className="fig-card-frame">
-                  <CardMedia photo={work.image} alt={work.title} />
+                  <CardMedia
+                    photo={work.image}
+                    alt={work.title ?? `${artist.name} — Work ${i + 1}`}
+                  />
                   <span className="fig-card-index">
                     No.{String(i + 1).padStart(2, '0')}
                   </span>
                 </div>
-                <div className="fig-card-caption">
-                  <span className="fig-card-name">{work.title}</span>
-                  <span className="fig-card-role">{work.year}</span>
-                </div>
+                {(work.title || work.year) && (
+                  <div className="fig-card-caption">
+                    {work.title && (
+                      <span className="fig-card-name">{work.title}</span>
+                    )}
+                    {work.year && (
+                      <span className="fig-card-role">{work.year}</span>
+                    )}
+                  </div>
+                )}
               </button>
             ))}
           </div>
@@ -756,6 +790,7 @@ function WorkDetailPage({
   onBack: () => void
 }) {
   const work = artist.works[index]
+  const no = `No.${String(index + 1).padStart(2, '0')}`
 
   return (
     <section className="fig-main fig-artist-detail fig-work-detail">
@@ -765,32 +800,42 @@ function WorkDetailPage({
 
       <div className="fig-detail-body">
         <div className="fig-card-frame fig-detail-frame">
-          <CardMedia photo={work.image} alt={work.title} />
+          <CardMedia
+            photo={work.image}
+            alt={work.title ?? `${artist.name} — Work ${index + 1}`}
+          />
         </div>
 
         <div className="fig-detail-info">
-          <h1 className="fig-detail-name">{work.title}</h1>
-          <span className="fig-detail-role">{work.year}</span>
+          {/* 제목을 아직 안 받은 작품은 넘버링으로 세운다. */}
+          <h1 className="fig-detail-name">{work.title ?? no}</h1>
+          {work.year && <span className="fig-detail-role">{work.year}</span>}
 
           <dl className="fig-work-spec">
-            <div>
-              <dt>Size</dt>
-              <dd>{work.size}</dd>
-            </div>
-            <div>
-              <dt>Medium</dt>
-              <dd>{work.medium}</dd>
-            </div>
+            {work.size && (
+              <div>
+                <dt>Size</dt>
+                <dd>{work.size}</dd>
+              </div>
+            )}
+            {work.medium && (
+              <div>
+                <dt>Medium</dt>
+                <dd>{work.medium}</dd>
+              </div>
+            )}
             <div>
               <dt>Artist</dt>
               <dd>{artist.name}</dd>
             </div>
-            <div>
-              <dt>Price</dt>
-              <dd className="is-price">
-                ₩ {work.price.toLocaleString('ko-KR')}
-              </dd>
-            </div>
+            {work.price !== null && (
+              <div>
+                <dt>Price</dt>
+                <dd className="is-price">
+                  ₩ {work.price.toLocaleString('ko-KR')}
+                </dd>
+              </div>
+            )}
           </dl>
 
           <p className="fig-work-notice">※ {IMAGE_NOTICE}</p>
