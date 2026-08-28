@@ -37,12 +37,54 @@ const TEAM = [
   },
 ]
 
+/**
+ * Artist 페이지 — Figma '86400artist' 시안.
+ *
+ * 시안 구조: 카드 3장 + 캡션 한 줄(Group 572)이 top 344 / 1052 / 1769 로
+ * 세 번 반복된다(708px 피치). 캡션은 카드마다 "이름 + 역할" 이 번갈아
+ * 놓이는데(Victor Lee · paint / SeoJeon Hyuen · paint / Juhwan Cheon · Toy),
+ * 좌표상 역할은 앞 카드 이름 뒤에 붙는다.
+ */
+type Artist = {
+  name: string
+  role: string
+  photo: string | null
+  /** 인스타 핸들. @ 없이 저장하고 표시할 때 붙인다. */
+  instagram: string | null
+  works: string[]
+}
+
+const ARTIST_ROW: Artist[] = [
+  {
+    name: 'Artist Victor Lee',
+    role: 'paint',
+    photo: victorLeePhoto,
+    instagram: null,
+    works: [],
+  },
+  {
+    name: 'SeoJeon Hyuen',
+    role: 'paint',
+    photo: seoHyeonJeonPhoto,
+    instagram: 'i_m_i.v___y',
+    works: [seoJeonHyuenWork01],
+  },
+  {
+    name: 'Juhwan Cheon',
+    role: 'Toy',
+    photo: juhwanCheonPhoto,
+    instagram: null,
+    works: [],
+  },
+]
+
 // 시안(Figma) 'New Season Artist' 3인 — 캡션은 "역할 + 이름" 순.
-// photo 가 없는 아티스트는 카드가 기존 플레이스홀더로 남는다.
+// 메인에 쓰는 표기(이름·역할)는 Artist 페이지와 달라 여기 따로 두되,
+// 사진과 상세 페이지 연결은 ARTIST_ROW 한 곳에서 끌어온다.
 const SEASON_ARTISTS = [
-  { role: 'paint', name: 'Victor Lee', photo: victorLeePhoto },
-  { role: 'Designer', name: 'SeoJeon Hyuen', photo: seoHyeonJeonPhoto },
-  { role: 'Toy', name: 'Juhwan Cheon', photo: juhwanCheonPhoto },
+  { role: 'paint', name: 'Victor Lee', artist: ARTIST_ROW[0] },
+  { role: 'Designer', name: 'SeoJeon Hyuen', artist: ARTIST_ROW[1] },
+  { role: 'Toy', name: 'Juhwan Cheon', artist: ARTIST_ROW[2] },
 ]
 
 /**
@@ -195,9 +237,14 @@ function App() {
                 <h2 className="fig-section-title">New Season Artist</h2>
                 <div className="fig-grid">
                   {SEASON_ARTISTS.map((a, i) => (
-                    <article key={a.name} className="fig-card">
+                    <button
+                      key={a.name}
+                      type="button"
+                      className="fig-card"
+                      onClick={() => openArtist(ARTIST_ROW.indexOf(a.artist))}
+                    >
                       <div className="fig-card-frame">
-                        <CardMedia photo={a.photo} alt={a.name} />
+                        <CardMedia photo={a.artist.photo} alt={a.name} />
                         <span className="fig-card-index">
                           No.{String(i + 1).padStart(2, '0')}
                         </span>
@@ -206,7 +253,7 @@ function App() {
                         <span className="fig-card-role">{a.role}</span>
                         <span className="fig-card-name">{a.name}</span>
                       </div>
-                    </article>
+                    </button>
                   ))}
                 </div>
               </div>
@@ -493,47 +540,6 @@ const ROOMS = [
     headline: '그리는 손, 보고 결정하는 눈.',
     body: '86400은 두 사람의 시선으로 만들어진다. 두 시선이 겹쳐지는 자리에 한 벌의 옷이 남는다.',
     accent: 'linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%)',
-  },
-]
-
-/**
- * Artist 페이지 — Figma '86400artist' 시안.
- *
- * 시안 구조: 카드 3장 + 캡션 한 줄(Group 572)이 top 344 / 1052 / 1769 로
- * 세 번 반복된다(708px 피치). 캡션은 카드마다 "이름 + 역할" 이 번갈아
- * 놓이는데(Victor Lee · paint / SeoJeon Hyuen · paint / Juhwan Cheon · Toy),
- * 좌표상 역할은 앞 카드 이름 뒤에 붙는다.
- */
-type Artist = {
-  name: string
-  role: string
-  photo: string | null
-  /** 인스타 핸들. @ 없이 저장하고 표시할 때 붙인다. */
-  instagram: string | null
-  works: string[]
-}
-
-const ARTIST_ROW: Artist[] = [
-  {
-    name: 'Artist Victor Lee',
-    role: 'paint',
-    photo: victorLeePhoto,
-    instagram: null,
-    works: [],
-  },
-  {
-    name: 'SeoJeon Hyuen',
-    role: 'paint',
-    photo: seoHyeonJeonPhoto,
-    instagram: 'i_m_i.v___y',
-    works: [seoJeonHyuenWork01],
-  },
-  {
-    name: 'Juhwan Cheon',
-    role: 'Toy',
-    photo: juhwanCheonPhoto,
-    instagram: null,
-    works: [],
   },
 ]
 
