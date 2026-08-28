@@ -46,6 +46,17 @@ const TEAM = [
  * 놓이는데(Victor Lee · paint / SeoJeon Hyuen · paint / Juhwan Cheon · Toy),
  * 좌표상 역할은 앞 카드 이름 뒤에 붙는다.
  */
+type Work = {
+  image: string
+  title: string
+  year: string
+  /** 작가가 준 표기 그대로 둔다. */
+  size: string
+  medium: string
+  /** 작품 노트. 첫 문단이 크게 나간다. */
+  note: string[]
+}
+
 type Artist = {
   name: string
   role: string
@@ -54,7 +65,7 @@ type Artist = {
   intro: string[]
   /** 인스타 핸들. @ 없이 저장하고 표시할 때 붙인다. */
   instagram: string | null
-  works: string[]
+  works: Work[]
 }
 
 const ARTIST_ROW: Artist[] = [
@@ -75,7 +86,19 @@ const ARTIST_ROW: Artist[] = [
       '저는 결국 예술이란 우리의 감정과 생각을 형상화하는 과정이고 이를 표현하고 공감받을 때 진정한 가치가 있다고 생각합니다.',
     ],
     instagram: 'i_m_i.v___y',
-    works: [seoJeonHyuenWork01],
+    works: [
+      {
+        image: seoJeonHyuenWork01,
+        title: '녹차라떼 먹추가',
+        year: '2024',
+        size: '54x39cm',
+        medium: 'In a korea paper, ink and light color',
+        note: [
+          '진정하기 위해 녹차를 마십니다. 집중하기 위해 카페인이 있는 걸로요. 아. 조금더 추가할까요? 먹??',
+          '좋아하는 색감과 터치, 그리고 얹었을 때 모든 박자가 완벽히 맞을 만한 장지에 그림을 그렸습니다. 드로잉처럼 손이 가는데로요. 연구작이으로 시작했지만 앞으로 저의 작업에 도움이 될 순간이였습니다. 기분이 좋아여><',
+        ],
+      },
+    ],
   },
   {
     name: 'Juhwan Cheon',
@@ -689,19 +712,20 @@ function ArtistDetailPage({
           <div className="fig-grid">
             {artist.works.map((work, i) => (
               <button
-                key={work}
+                key={work.title}
                 type="button"
                 className="fig-card"
                 onClick={() => onOpenWork(i)}
               >
                 <div className="fig-card-frame">
-                  <CardMedia
-                    photo={work}
-                    alt={`${artist.name} — Work ${i + 1}`}
-                  />
+                  <CardMedia photo={work.image} alt={work.title} />
                   <span className="fig-card-index">
                     No.{String(i + 1).padStart(2, '0')}
                   </span>
+                </div>
+                <div className="fig-card-caption">
+                  <span className="fig-card-name">{work.title}</span>
+                  <span className="fig-card-role">{work.year}</span>
                 </div>
               </button>
             ))}
@@ -714,7 +738,6 @@ function ArtistDetailPage({
 
 /**
  * 작품 상세 — Artist 상세와 같은 레이아웃(왼쪽 526 프레임 + 오른쪽 정보).
- * 작품에 붙은 제목·연도 데이터가 아직 없어 넘버링과 작가 이름만 세운다.
  */
 function WorkDetailPage({
   artist,
@@ -725,7 +748,7 @@ function WorkDetailPage({
   index: number
   onBack: () => void
 }) {
-  const no = `No.${String(index + 1).padStart(2, '0')}`
+  const work = artist.works[index]
 
   return (
     <section className="fig-main fig-artist-detail fig-work-detail">
@@ -735,15 +758,35 @@ function WorkDetailPage({
 
       <div className="fig-detail-body">
         <div className="fig-card-frame fig-detail-frame">
-          <CardMedia
-            photo={artist.works[index]}
-            alt={`${artist.name} — Work ${index + 1}`}
-          />
+          <CardMedia photo={work.image} alt={work.title} />
         </div>
 
         <div className="fig-detail-info">
-          <h1 className="fig-detail-name">{no}</h1>
-          <span className="fig-detail-role">{artist.name}</span>
+          <h1 className="fig-detail-name">{work.title}</h1>
+          <span className="fig-detail-role">{work.year}</span>
+
+          <dl className="fig-work-spec">
+            <div>
+              <dt>Size</dt>
+              <dd>{work.size}</dd>
+            </div>
+            <div>
+              <dt>Medium</dt>
+              <dd>{work.medium}</dd>
+            </div>
+            <div>
+              <dt>Artist</dt>
+              <dd>{artist.name}</dd>
+            </div>
+          </dl>
+
+          {work.note.length > 0 && (
+            <div className="fig-detail-intro">
+              {work.note.map((p) => (
+                <p key={p}>{p}</p>
+              ))}
+            </div>
+          )}
 
           {artist.instagram && (
             <a

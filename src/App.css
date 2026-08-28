@@ -511,6 +511,42 @@
   color: rgba(255, 255, 255, 0.55);
 }
 
+/* 작품 스펙 — 라벨/값 두 칸. 소개글보다 먼저 오는 사실 정보라 조용하게. */
+.fig-work-spec {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: clamp(20px, 2.5vw, 32px) 0 0;
+  padding: clamp(20px, 2.5vw, 28px) 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  max-width: 46ch;
+}
+
+.fig-work-spec > div {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 16px;
+  align-items: baseline;
+}
+
+.fig-work-spec dt {
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.fig-work-spec dd {
+  margin: 0;
+  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(13px, 1vw, 15px);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.78);
+  word-break: keep-all;
+}
+
 .fig-detail-intro {
   display: flex;
   flex-direction: column;
