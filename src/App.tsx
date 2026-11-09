@@ -372,7 +372,11 @@ function App() {
           />
 
           {page === 'collection' && (
-            <HomePage onOpenArtist={openArtist} onOpenProduct={openProduct} />
+            <HomePage
+              onOpenArtist={openArtist}
+              onOpenArtistList={goArtist}
+              onOpenProduct={openProduct}
+            />
           )}
 
           {page === 'artist' && (
@@ -475,11 +479,132 @@ const ROOMS = [
  * 풀스크린 히어로(키 비주얼 = 전서현 '상') 아래 아티스트 에디토리얼 밴드가
  * 좌우 교차로 이어지고, 제품은 비대칭 스태거 배치.
  */
+/**
+ * 홈 히어로 — 광고 배너 캐로셀.
+ * 1번: 아티스트/브랜드 배너(기존 히어로 그대로), 2번: 제품 배너(86400 Pendant).
+ * 배너를 더 올리려면 slides 배열에 추가하면 된다. 6초마다 자동 전환.
+ */
+function HomeHero({
+  onOpenArtistList,
+  onOpenProduct,
+}: {
+  onOpenArtistList: () => void
+  onOpenProduct: (index: number) => void
+}) {
+  const slides = [
+    {
+      key: 'artist',
+      image: seoHyeonJeonWork02,
+      label: '아티스트 배너',
+      cta: { label: 'NEW SEASON ARTIST →', go: onOpenArtistList },
+      body: (
+        <>
+          <span className="rn-eyebrow">
+            Vol.01 — New Season · Founders Edition
+          </span>
+          <img className="rn-hero-logo" src={logoWhite} alt="86400" />
+          <span className="rn-hero-tagline">
+            불확실한 미래에 확실한 나를 보여주는
+          </span>
+        </>
+      ),
+    },
+    {
+      key: 'pendant',
+      image: leeJiMinWork02,
+      label: '상품 배너',
+      cta: { label: 'VIEW PRODUCT →', go: () => onOpenProduct(0) },
+      body: (
+        <>
+          <span className="rn-eyebrow">
+            Vol.01 — Product No.001 · Coming Soon
+          </span>
+          <h2 className="rn-hero-title">86400 Pendant</h2>
+          <span className="rn-hero-tagline">
+            Object — Designed by Lee Ji Min
+          </span>
+        </>
+      ),
+    },
+  ]
+
+  const [cur, setCur] = useState(0)
+
+  // cur 가 바뀔 때마다 타이머를 다시 걸어, 수동 전환 직후 바로 넘어가는 걸 막는다.
+  useEffect(() => {
+    const id = window.setInterval(
+      () => setCur((c) => (c + 1) % slides.length),
+      6000
+    )
+    return () => window.clearInterval(id)
+  }, [cur, slides.length])
+
+  const prev = () => setCur((c) => (c - 1 + slides.length) % slides.length)
+  const next = () => setCur((c) => (c + 1) % slides.length)
+
+  return (
+    <div className="rn-hero">
+      {slides.map((s, i) => (
+        <div
+          key={s.key}
+          className={`rn-slide ${i === cur ? 'is-active' : ''}`}
+          aria-hidden={i !== cur}
+        >
+          <img className="rn-hero-bg" src={s.image} alt="" aria-hidden="true" />
+          <div className="rn-hero-scrim" />
+          <div className="rn-hero-center">
+            {s.body}
+            <button type="button" className="rn-hero-cta" onClick={s.cta.go}>
+              {s.cta.label}
+            </button>
+          </div>
+        </div>
+      ))}
+
+      <button
+        type="button"
+        className="rn-hero-arrow is-prev"
+        onClick={prev}
+        aria-label="이전 배너"
+      >
+        ←
+      </button>
+      <button
+        type="button"
+        className="rn-hero-arrow is-next"
+        onClick={next}
+        aria-label="다음 배너"
+      >
+        →
+      </button>
+
+      <div className="rn-hero-nav">
+        {slides.map((s, i) => (
+          <button
+            key={s.key}
+            type="button"
+            className={i === cur ? 'is-active' : ''}
+            onClick={() => setCur(i)}
+            aria-label={`${s.label}로 이동`}
+          />
+        ))}
+      </div>
+
+      <div className="rn-hero-foot">
+        <span>ONE DAY = 86400 SECONDS</span>
+        <span>SCROLL ↓</span>
+      </div>
+    </div>
+  )
+}
+
 function HomePage({
   onOpenArtist,
+  onOpenArtistList,
   onOpenProduct,
 }: {
   onOpenArtist: (index: number) => void
+  onOpenArtistList: () => void
   onOpenProduct: (index: number) => void
 }) {
   // 홈에 세우는 에디토리얼 밴드. 소개글이 있는 아티스트만 올라간다.
@@ -489,28 +614,10 @@ function HomePage({
 
   return (
     <section className="rn-home">
-      <div className="rn-hero">
-        <img
-          className="rn-hero-bg"
-          src={seoHyeonJeonWork02}
-          alt=""
-          aria-hidden="true"
-        />
-        <div className="rn-hero-scrim" />
-        <div className="rn-hero-center">
-          <span className="rn-eyebrow">
-            Vol.01 — New Season · Founders Edition
-          </span>
-          <img className="rn-hero-logo" src={logoWhite} alt="86400" />
-          <span className="rn-hero-tagline">
-            불확실한 미래에 확실한 나를 보여주는
-          </span>
-        </div>
-        <div className="rn-hero-foot">
-          <span>ONE DAY = 86400 SECONDS</span>
-          <span>SCROLL ↓</span>
-        </div>
-      </div>
+      <HomeHero
+        onOpenArtistList={onOpenArtistList}
+        onOpenProduct={onOpenProduct}
+      />
 
       {bands.map(({ artist, index }, i) => (
         <article key={artist.name} className={`rn-band ${i % 2 === 1 ? 'is-reverse' : ''}`}>
