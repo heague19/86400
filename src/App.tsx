@@ -486,9 +486,11 @@ const ROOMS = [
  */
 function HomeHero({
   onOpenArtistList,
+  onOpenArtist,
   onOpenProduct,
 }: {
   onOpenArtistList: () => void
+  onOpenArtist: (index: number) => void
   onOpenProduct: (index: number) => void
 }) {
   const slides = [
@@ -505,6 +507,24 @@ function HomeHero({
           <img className="rn-hero-logo" src={logoWhite} alt="86400" />
           <span className="rn-hero-tagline">
             불확실한 미래에 확실한 나를 보여주는
+          </span>
+        </>
+      ),
+    },
+    {
+      key: 'art',
+      image: seoHyeonJeonWork01,
+      label: '아트 배너',
+      // ARTIST_ROW[1] = SeoHyeon Jeon — 작품을 가진 작가의 상세로 보낸다.
+      cta: { label: 'VIEW WORKS →', go: () => onOpenArtist(1) },
+      body: (
+        <>
+          <span className="rn-eyebrow">
+            Vol.01 — New Season Works · SeoHyeon Jeon
+          </span>
+          <h2 className="rn-hero-title">녹차라떼 먹추가</h2>
+          <span className="rn-hero-tagline">
+            In a korea paper, ink and light color · 2024
           </span>
         </>
       ),
@@ -616,6 +636,7 @@ function HomePage({
     <section className="rn-home">
       <HomeHero
         onOpenArtistList={onOpenArtistList}
+        onOpenArtist={onOpenArtist}
         onOpenProduct={onOpenProduct}
       />
 
