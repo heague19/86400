@@ -15,6 +15,7 @@ import leeJiMinWork02 from './assets/LeeJiMin-Work02.png'
 import seoHyeonJeonWork01 from './assets/SeoHyeonJeon-Work01.jpg'
 import seoHyeonJeonWork02 from './assets/SeoHyeonJeon-Work02.jpg'
 import seoHyeonJeonWork03 from './assets/SeoHyeonJeon-Work03.jpg'
+import partnerDodaLogo from './assets/partner-doda.png'
 
 type Page =
   | 'collection'
@@ -735,6 +736,16 @@ function HomePage({
           </button>
           </Reveal>
         ))}
+      </div>
+
+      <div className="rn-partners">
+        <span className="rn-eyebrow">Partner</span>
+        <div className="rn-partners-row">
+          <img
+            src={partnerDodaLogo}
+            alt="DODA — Video Production Company"
+          />
+        </div>
       </div>
     </section>
   )

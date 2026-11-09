@@ -436,6 +436,36 @@
   color: var(--rn-dim);
 }
 
+/* ---------- 홈: 협력사 ---------- */
+
+.rn-partners {
+  padding: 56px var(--rn-pad) 24px;
+  border-top: 1px solid var(--rn-line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.rn-partners-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 56px;
+  flex-wrap: wrap;
+}
+
+.rn-partners-row img {
+  height: 76px;
+  width: auto;
+  opacity: 0.92;
+  transition: opacity 0.2s;
+}
+
+.rn-partners-row img:hover {
+  opacity: 1;
+}
+
 /* ---------- Artist 목록: 아코디언 ---------- */
 
 .rn-acc-page {
