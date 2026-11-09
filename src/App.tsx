@@ -620,7 +620,8 @@ function HomePage({
       />
 
       {bands.map(({ artist, index }, i) => (
-        <article key={artist.name} className={`rn-band ${i % 2 === 1 ? 'is-reverse' : ''}`}>
+        <Reveal key={artist.name}>
+        <article className={`rn-band ${i % 2 === 1 ? 'is-reverse' : ''}`}>
           <button
             type="button"
             className={`rn-band-media ${artist.cutout ? 'is-panel' : ''}`}
@@ -644,6 +645,7 @@ function HomePage({
             </button>
           </div>
         </article>
+        </Reveal>
       ))}
 
       <div className="rn-products">
@@ -652,8 +654,8 @@ function HomePage({
           <span>VOL.01 — EDITION OF 100</span>
         </div>
         {PRODUCTS.slice(0, 2).map((p, i) => (
+          <Reveal key={p.name}>
           <button
-            key={p.name}
             type="button"
             className={`rn-prod-row ${i % 2 === 1 ? 'is-reverse' : ''}`}
             onClick={() => onOpenProduct(i)}
@@ -675,6 +677,7 @@ function HomePage({
               )}
             </span>
           </button>
+          </Reveal>
         ))}
       </div>
     </section>
@@ -760,8 +763,8 @@ function ArtistPage({
         </div>
         <div className="rn-agrid-grid">
           {ARTIST_ROW.map((a, i) => (
+            <Reveal key={a.name} delay={i * 0.08}>
             <button
-              key={a.name}
               type="button"
               className="rn-agrid-tile"
               onClick={() => onOpenArtist(i)}
@@ -775,6 +778,7 @@ function ArtistPage({
                 </span>
               </span>
             </button>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -828,12 +832,14 @@ function ArtistDetailPage({
       </div>
 
       {artist.intro.length > 0 && (
+        <Reveal>
         <div className="rn-ad-statement">
           <span className="rn-eyebrow">Statement</span>
           <div className="rn-ad-statement-body">
             <Prose paragraphs={artist.intro} />
           </div>
         </div>
+        </Reveal>
       )}
 
       {artist.works.length > 0 && (
@@ -894,7 +900,7 @@ function WorkDetailPage({
           ← {artist.name}
         </button>
         <img
-          className="rn-work-img"
+          className="rn-work-img rn-anim-fade"
           src={work.image}
           alt={work.title ?? `${artist.name} — Work ${index + 1}`}
         />
@@ -1037,6 +1043,8 @@ function ProductDetailPage({
       <div className="rn-pd-media">
         {product.images.length > 0 ? (
           <img
+            key={imgIdx}
+            className="rn-anim-fade"
             src={product.images[imgIdx]}
             alt={`${product.name}${
               product.options[imgIdx] ? ` — ${product.options[imgIdx]}` : ''
@@ -1397,6 +1405,26 @@ function useReveal<T extends HTMLElement>() {
   }, [])
 
   return { ref, shown }
+}
+
+/** 스크롤 리빌 공용 래퍼 — .reveal 스타일(App.css)을 그대로 쓴다. */
+function Reveal({
+  children,
+  delay = 0,
+}: {
+  children: React.ReactNode
+  delay?: number
+}) {
+  const { ref, shown } = useReveal<HTMLDivElement>()
+  return (
+    <div
+      ref={ref}
+      className={`reveal ${shown ? 'is-visible' : ''}`}
+      style={delay ? { transitionDelay: `${delay}s` } : undefined}
+    >
+      {children}
+    </div>
+  )
 }
 
 /** Brand 챕터 — 거대 타이포 레이아웃용. ghost 는 배경 워터마크 문자. */

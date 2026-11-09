@@ -11,8 +11,10 @@
   --rn-mute: #8f8f89;
   --rn-line: #1c1c1c;
   --rn-pad: clamp(20px, 4.4vw, 56px);
-  --rn-display: 'Space Grotesk', 'Inter', sans-serif;
-  --rn-body: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --rn-display: 'Space Grotesk', 'Pretendard Variable', Pretendard, sans-serif;
+  --rn-body: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Helvetica Neue', Arial,
+    sans-serif;
 }
 
 .rn-eyebrow {
@@ -160,7 +162,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -46%);
+  transform: translate(-50%, -42%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -168,6 +170,14 @@
   text-align: center;
   width: max-content;
   max-width: 90vw;
+  /* 슬라이드 전환 시 텍스트가 살짝 떠오르며 들어온다 */
+  opacity: 0;
+  transition: opacity 0.7s ease 0.25s, transform 0.7s ease 0.25s;
+}
+
+.rn-slide.is-active .rn-hero-center {
+  opacity: 1;
+  transform: translate(-50%, -46%);
 }
 
 .rn-hero-center .rn-eyebrow {
@@ -1362,6 +1372,51 @@
 
 .rn-brand-finale img {
   height: 20px;
+}
+
+/* ---------- 애니메이션 공용 ---------- */
+
+@keyframes rn-fade {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rn-anim-fade {
+  animation: rn-fade 0.5s ease both;
+}
+
+/* 그리드/리스트 안에서 Reveal 래퍼가 레이아웃을 깨지 않게 */
+.rn-agrid-grid .reveal {
+  display: block;
+  min-width: 0;
+}
+
+.rn-agrid-grid .reveal .rn-agrid-tile {
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rn-slide,
+  .rn-hero-center,
+  .reveal,
+  .rn-band-media img,
+  .rn-agrid-tile img,
+  .rn-acc-panel,
+  .rn-acc-panel img,
+  .rn-acc-cap,
+  .rn-acc-vert {
+    transition: none !important;
+  }
+
+  .rn-anim-fade {
+    animation: none !important;
+  }
 }
 
 /* ---------- 반응형 ---------- */
