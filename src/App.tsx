@@ -189,8 +189,6 @@ type Product = {
   material: string | null
 }
 
-const SIZES = ['XS', 'S', 'M', 'L', 'XL']
-
 /** Vol.01 제품. 화보·스펙이 없는 항목은 비워두면 상세에서 알아서 숨는다. */
 const PRODUCTS: Product[] = [
   {
@@ -203,28 +201,6 @@ const PRODUCTS: Product[] = [
     defaultOption: 'Black',
     desc: null,
     material: null,
-  },
-  {
-    name: 'Series 00:00 Shirt',
-    price: '₩ 129,000',
-    meta: '142일의 기록',
-    images: [],
-    optionLabel: 'Size',
-    options: SIZES,
-    defaultOption: 'M',
-    desc: '불확실한 미래에 확실한 나를 표현하는 한 벌. 데뷔 시즌 한정 넘버링으로 제작된 Founders Edition은 시간이 흘러도 변하지 않는 코드를 담습니다.',
-    material: '100% Cotton · Made in Korea',
-  },
-  {
-    name: 'Reflection Tee',
-    price: '₩ 98,000',
-    meta: 'Edition of 100',
-    images: [],
-    optionLabel: 'Size',
-    options: SIZES,
-    defaultOption: 'M',
-    desc: '불확실한 미래에 확실한 나를 표현하는 한 벌. 데뷔 시즌 한정 넘버링으로 제작된 Founders Edition은 시간이 흘러도 변하지 않는 코드를 담습니다.',
-    material: '100% Cotton · Made in Korea',
   },
 ]
 
