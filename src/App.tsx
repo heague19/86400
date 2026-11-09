@@ -545,9 +545,13 @@ function HomeHero({
               </span>
             </button>
           ))}
-          <span className="rn-slide-acc-label rn-eyebrow">
-            New Season Artist — Vol.01
-          </span>
+          <div className="rn-slide-acc-title">
+            <span className="rn-eyebrow">Vol.01 — Founders Edition</span>
+            <h2 className="rn-hero-title">New Season Artist</h2>
+            <span className="rn-hero-tagline">
+              {ARTIST_ROW.map((a) => a.name.replace(/^Artist /, '')).join(' · ')}
+            </span>
+          </div>
         </div>
       ),
     },
