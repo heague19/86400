@@ -10,6 +10,8 @@ import victorLeePhoto from './assets/VictorLeeProfile.jpg'
 import seoHyeonJeonPhoto from './assets/SeoHyeonJeonProfile.jpg'
 import juhwanCheonPhoto from './assets/JuhwanCheonProfile.png'
 import leeJiMinPhoto from './assets/LeeJiMinProfile.png'
+import leeJiMinWork01 from './assets/LeeJiMin-Work01.png'
+import leeJiMinWork02 from './assets/LeeJiMin-Work02.png'
 import seoHyeonJeonWork01 from './assets/SeoHyeonJeon-Work01.jpg'
 import seoHyeonJeonWork02 from './assets/SeoHyeonJeon-Work02.jpg'
 import seoHyeonJeonWork03 from './assets/SeoHyeonJeon-Work03.jpg'
@@ -149,7 +151,27 @@ const ARTIST_ROW: Artist[] = [
       '같은 패턴을 매일 다시 그렸다. 사라진 선들이 결국 이 한 벌을 완성했다.',
     ],
     instagram: null,
-    works: [],
+    // 86400 펜던트 오브제 — 블랙/실버. 제목·연도·가격은 아직 못 받아 비워둔다.
+    works: [
+      {
+        image: leeJiMinWork01,
+        title: null,
+        year: null,
+        size: null,
+        medium: null,
+        price: null,
+        note: [],
+      },
+      {
+        image: leeJiMinWork02,
+        title: null,
+        year: null,
+        size: null,
+        medium: null,
+        price: null,
+        note: [],
+      },
+    ],
   },
 ]
 
