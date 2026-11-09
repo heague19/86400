@@ -77,9 +77,9 @@ type Artist = {
 
 const ARTIST_ROW: Artist[] = [
   {
-    name: 'Artist Victor Lee',
-    role: 'paint',
-    photo: victorLeePhoto,
+    name: 'Juhwan Cheon',
+    role: 'Toy',
+    photo: juhwanCheonPhoto,
     intro: [],
     instagram: null,
     works: [],
@@ -134,9 +134,9 @@ const ARTIST_ROW: Artist[] = [
     ],
   },
   {
-    name: 'Juhwan Cheon',
-    role: 'Toy',
-    photo: juhwanCheonPhoto,
+    name: 'Artist Victor Lee',
+    role: 'paint',
+    photo: victorLeePhoto,
     intro: [],
     instagram: null,
     works: [],
