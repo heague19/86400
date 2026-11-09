@@ -568,6 +568,37 @@ function ArtistPage({
           VIEW ONLINE EXHIBITION →
         </button>
       </div>
+
+      <div className="rn-agrid">
+        <div className="rn-agrid-head">
+          <div className="rn-agrid-title">
+            <span className="rn-eyebrow">Index</span>
+            <h2>All Artists</h2>
+          </div>
+          <span className="rn-agrid-count">
+            {ARTIST_ROW.length} ARTISTS
+          </span>
+        </div>
+        <div className="rn-agrid-grid">
+          {ARTIST_ROW.map((a, i) => (
+            <button
+              key={a.name}
+              type="button"
+              className="rn-agrid-tile"
+              onClick={() => onOpenArtist(i)}
+            >
+              {a.photo && <img src={a.photo} alt={a.name} />}
+              <span className="rn-agrid-cap">
+                <strong>{a.name}</strong>
+                <span>
+                  No.{String(i + 1).padStart(2, '0')} · {a.role}
+                  {a.works.length > 0 && ` · ${a.works.length} works`}
+                </span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
     </section>
   )
 }
