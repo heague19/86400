@@ -9,7 +9,7 @@ import logoBlack from './assets/86400black.png'
 import victorLeePhoto from './assets/VictorLeeProfile.jpg'
 import seoHyeonJeonPhoto from './assets/SeoHyeonJeonProfile.jpg'
 import juhwanCheonPhoto from './assets/JuhwanCheonProfile.png'
-import joYeonJuPhoto from './assets/JoYeonJuProfile.png'
+import leeJiMinPhoto from './assets/LeeJiMinProfile.png'
 import seoHyeonJeonWork01 from './assets/SeoHyeonJeon-Work01.jpg'
 import seoHyeonJeonWork02 from './assets/SeoHyeonJeon-Work02.jpg'
 import seoHyeonJeonWork03 from './assets/SeoHyeonJeon-Work03.jpg'
@@ -34,8 +34,8 @@ const TEAM = [
   },
   {
     role: 'Designer',
-    name: 'Jo Yeon Ju',
-    photo: joYeonJuPhoto,
+    name: 'Lee Ji Min',
+    photo: leeJiMinPhoto,
     quote:
       '같은 패턴을 매일 다시 그렸다. 사라진 선들이 결국 이 한 벌을 완성했다.',
   },
@@ -142,10 +142,9 @@ const ARTIST_ROW: Artist[] = [
     works: [],
   },
   {
-    name: 'Jo Yeon Ju',
+    name: 'Lee Ji Min',
     role: 'Designer',
-    photo: joYeonJuPhoto,
-    cutout: true,
+    photo: leeJiMinPhoto,
     intro: [
       '같은 패턴을 매일 다시 그렸다. 사라진 선들이 결국 이 한 벌을 완성했다.',
     ],
@@ -1047,8 +1046,8 @@ function DirectorView({ productNo }: { productNo: number }) {
     },
     {
       role: 'Designer',
-      name: 'Jo Yeon Ju',
-      handle: '@jo.yeonju',
+      name: 'Lee Ji Min',
+      handle: '@lee.jimin',
       photo: TEAM[1].photo,
       quote:
         '이 옷을 만드는 동안, 매일 같은 패턴을 다시 그렸습니다. 사라진 선들이 결국 이 한 벌을 완성했어요.',
