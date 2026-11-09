@@ -484,6 +484,16 @@ const ROOMS = [
  * 1번: 아티스트/브랜드 배너(기존 히어로 그대로), 2번: 제품 배너(86400 Pendant).
  * 배너를 더 올리려면 slides 배열에 추가하면 된다. 6초마다 자동 전환.
  */
+type HeroSlide = {
+  key: string
+  label: string
+  image?: string
+  body?: React.ReactNode
+  cta?: { label: string; go: () => void }
+  /** image/body 대신 슬라이드 전체를 직접 그리는 배너(아티스트 라인업 등). */
+  custom?: React.ReactNode
+}
+
 function HomeHero({
   onOpenArtistList,
   onOpenArtist,
@@ -493,7 +503,7 @@ function HomeHero({
   onOpenArtist: (index: number) => void
   onOpenProduct: (index: number) => void
 }) {
-  const slides = [
+  const slides: HeroSlide[] = [
     {
       key: 'artist',
       image: seoHyeonJeonWork02,
@@ -509,6 +519,36 @@ function HomeHero({
             불확실한 미래에 확실한 나를 보여주는
           </span>
         </>
+      ),
+    },
+    {
+      key: 'lineup',
+      label: '아티스트 라인업 배너',
+      custom: (
+        <div className="rn-slide-acc">
+          {ARTIST_ROW.map((a, idx) => (
+            <button
+              key={a.name}
+              type="button"
+              className="rn-acc-panel"
+              onClick={() => onOpenArtist(idx)}
+            >
+              {a.photo && <img src={a.photo} alt={a.name} />}
+              <span className="rn-acc-vert">
+                {a.name} — No.{String(idx + 1).padStart(2, '0')}
+              </span>
+              <span className="rn-acc-cap">
+                <span className="rn-eyebrow">
+                  No.{String(idx + 1).padStart(2, '0')} · {a.role}
+                </span>
+                <strong>{a.name}</strong>
+              </span>
+            </button>
+          ))}
+          <span className="rn-slide-acc-label rn-eyebrow">
+            New Season Artist — Vol.01
+          </span>
+        </div>
       ),
     },
     {
@@ -570,14 +610,29 @@ function HomeHero({
           className={`rn-slide ${i === cur ? 'is-active' : ''}`}
           aria-hidden={i !== cur}
         >
-          <img className="rn-hero-bg" src={s.image} alt="" aria-hidden="true" />
-          <div className="rn-hero-scrim" />
-          <div className="rn-hero-center">
-            {s.body}
-            <button type="button" className="rn-hero-cta" onClick={s.cta.go}>
-              {s.cta.label}
-            </button>
-          </div>
+          {s.custom ?? (
+            <>
+              <img
+                className="rn-hero-bg"
+                src={s.image}
+                alt=""
+                aria-hidden="true"
+              />
+              <div className="rn-hero-scrim" />
+              <div className="rn-hero-center">
+                {s.body}
+                {s.cta && (
+                  <button
+                    type="button"
+                    className="rn-hero-cta"
+                    onClick={s.cta.go}
+                  >
+                    {s.cta.label}
+                  </button>
+                )}
+              </div>
+            </>
+          )}
         </div>
       ))}
 

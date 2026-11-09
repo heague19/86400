@@ -84,6 +84,22 @@
   color: #0a0a0a;
 }
 
+/* 아티스트 라인업 배너 — 아코디언 패널을 히어로 안에 그대로 세운다 */
+.rn-slide-acc {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+
+.rn-slide-acc-label {
+  position: absolute;
+  left: var(--rn-pad);
+  bottom: 72px;
+  z-index: 2;
+  color: #d6d6cf;
+  pointer-events: none;
+}
+
 .rn-hero-arrow {
   position: absolute;
   top: 50%;
@@ -1480,6 +1496,23 @@
     transform: none;
     left: 24px;
     bottom: 20px;
+  }
+
+  /* 히어로 안 라인업 배너는 모바일에서도 가로 패널을 유지한다 */
+  .rn-slide-acc .rn-acc-panel,
+  .rn-slide-acc .rn-acc-panel:hover,
+  .rn-slide-acc .rn-acc-panel:focus-visible {
+    height: auto;
+    border-bottom: none;
+    border-right: 1px solid #000000;
+  }
+
+  .rn-slide-acc .rn-acc-vert {
+    writing-mode: vertical-rl;
+    transform: translateX(-50%) rotate(180deg);
+    left: 50%;
+    bottom: 28px;
+    font-size: 13px;
   }
 
   .rn-agrid-grid {
