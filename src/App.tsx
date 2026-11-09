@@ -175,11 +175,57 @@ const ARTIST_ROW: Artist[] = [
   },
 ]
 
-/** Vol.01 제품. 화보가 나오기 전까지 넘버링 플레이스홀더로 세운다. */
-const PRODUCTS = [
-  { name: 'Series 00:00 Shirt', price: '₩ 129,000', meta: '142일의 기록' },
-  { name: 'Reflection Tee', price: '₩ 98,000', meta: 'Edition of 100' },
-  { name: '142 Days Jacket', price: '₩ 248,000', meta: 'Edition of 100' },
+type Product = {
+  name: string
+  /** null 이면 가격 미정 — 상세의 CTA 가 COMING SOON 으로 바뀐다. */
+  price: string | null
+  meta: string
+  /** 제품 화보. 비어 있으면 넘버링 플레이스홀더가 나간다. */
+  images: string[]
+  optionLabel: string
+  options: string[]
+  defaultOption: string
+  desc: string | null
+  material: string | null
+}
+
+const SIZES = ['XS', 'S', 'M', 'L', 'XL']
+
+/** Vol.01 제품. 화보·스펙이 없는 항목은 비워두면 상세에서 알아서 숨는다. */
+const PRODUCTS: Product[] = [
+  {
+    name: '86400 Pendant',
+    price: null,
+    meta: 'Object · Designed by Lee Ji Min',
+    images: [leeJiMinWork01, leeJiMinWork02],
+    optionLabel: 'Finish',
+    options: ['Black', 'Silver'],
+    defaultOption: 'Black',
+    desc: null,
+    material: null,
+  },
+  {
+    name: 'Series 00:00 Shirt',
+    price: '₩ 129,000',
+    meta: '142일의 기록',
+    images: [],
+    optionLabel: 'Size',
+    options: SIZES,
+    defaultOption: 'M',
+    desc: '불확실한 미래에 확실한 나를 표현하는 한 벌. 데뷔 시즌 한정 넘버링으로 제작된 Founders Edition은 시간이 흘러도 변하지 않는 코드를 담습니다.',
+    material: '100% Cotton · Made in Korea',
+  },
+  {
+    name: 'Reflection Tee',
+    price: '₩ 98,000',
+    meta: 'Edition of 100',
+    images: [],
+    optionLabel: 'Size',
+    options: SIZES,
+    defaultOption: 'M',
+    desc: '불확실한 미래에 확실한 나를 표현하는 한 벌. 데뷔 시즌 한정 넘버링으로 제작된 Founders Edition은 시간이 흘러도 변하지 않는 코드를 담습니다.',
+    material: '100% Cotton · Made in Korea',
+  },
 ]
 
 /**
@@ -511,11 +557,15 @@ function HomePage({
               </span>
               <span className="rn-prod-name">{p.name}</span>
               <span className="rn-prod-meta">
-                {p.price} · {p.meta}
+                {p.price ?? '가격 미정'} · {p.meta}
               </span>
             </span>
             <span className="rn-prod-ph">
-              No.{String(i + 1).padStart(3, '0')}
+              {p.images[0] ? (
+                <img src={p.images[0]} alt={p.name} />
+              ) : (
+                <>No.{String(i + 1).padStart(3, '0')}</>
+              )}
             </span>
           </button>
         ))}
@@ -835,7 +885,9 @@ function ProductPage({ onOpenProduct }: { onOpenProduct: (index: number) => void
             onClick={() => onOpenProduct(i)}
           >
             <div className="fig-card-frame">
-              <div className="fig-card-media" />
+              <div className="fig-card-media">
+                {p.images[0] && <img src={p.images[0]} alt={p.name} />}
+              </div>
               <span className="fig-card-index">
                 No.{String(i + 1).padStart(3, '0')}
               </span>
@@ -863,21 +915,55 @@ function ProductDetailPage({
   onBack: () => void
 }) {
   const product = PRODUCTS[index]
-  const sizes = ['XS', 'S', 'M', 'L', 'XL']
-  const [size, setSize] = useState('M')
+  const [option, setOption] = useState(product.defaultOption)
+  const [imgIdx, setImgIdx] = useState(0)
   const no = `No.${String(index + 1).padStart(3, '0')}`
+
+  // Finish(Black/Silver)처럼 옵션과 화보가 1:1 이면 옵션 선택이 화보도 넘긴다.
+  const pickOption = (s: string, i: number) => {
+    setOption(s)
+    if (product.images.length === product.options.length) setImgIdx(i)
+  }
 
   return (
     <section className="rn-pd">
       <div className="rn-pd-media">
-        <span>{no}</span>
-        <span className="rn-pd-media-label">PRODUCT IMAGE</span>
-        <div className="rn-pd-dots" aria-hidden="true">
-          <span className="is-active" />
-          <span />
-          <span />
-          <span />
-        </div>
+        {product.images.length > 0 ? (
+          <img
+            src={product.images[imgIdx]}
+            alt={`${product.name}${
+              product.options[imgIdx] ? ` — ${product.options[imgIdx]}` : ''
+            }`}
+          />
+        ) : (
+          <span>{no}</span>
+        )}
+        <span className="rn-pd-media-label">
+          PRODUCT IMAGE
+          {product.images.length > 1 && product.options[imgIdx]
+            ? ` — ${product.options[imgIdx].toUpperCase()}`
+            : ''}
+        </span>
+        {product.images.length > 1 ? (
+          <div className="rn-pd-dots">
+            {product.images.map((src, i) => (
+              <button
+                key={src}
+                type="button"
+                className={i === imgIdx ? 'is-active' : ''}
+                onClick={() => setImgIdx(i)}
+                aria-label={`제품 이미지 ${i + 1}`}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="rn-pd-dots" aria-hidden="true">
+            <span className="is-active" />
+            <span />
+            <span />
+            <span />
+          </div>
+        )}
       </div>
 
       <div className="rn-pd-info">
@@ -888,19 +974,21 @@ function ProductDetailPage({
           <span className="rn-eyebrow">Vol.01 / Founders Edition</span>
           <h1 className="rn-pd-title">{product.name}</h1>
           <div className="rn-pd-pricerow">
-            <span className="rn-pd-price">{product.price}</span>
-            <span className="rn-pd-edition">Edition of 100 — {no}</span>
+            <span className="rn-pd-price">{product.price ?? '가격 미정'}</span>
+            <span className="rn-pd-edition">
+              {no} · {product.meta}
+            </span>
           </div>
 
           <div className="rn-pd-sizes">
-            <span className="rn-eyebrow">Size</span>
+            <span className="rn-eyebrow">{product.optionLabel}</span>
             <div className="rn-size-row">
-              {sizes.map((s) => (
+              {product.options.map((s, i) => (
                 <button
                   key={s}
                   type="button"
-                  className={`rn-size ${size === s ? 'is-active' : ''}`}
-                  onClick={() => setSize(s)}
+                  className={`rn-size ${option === s ? 'is-active' : ''}`}
+                  onClick={() => pickOption(s, i)}
                 >
                   {s}
                 </button>
@@ -908,18 +996,18 @@ function ProductDetailPage({
             </div>
           </div>
 
-          <details className="rn-pd-details" open>
-            <summary>DESCRIPTION</summary>
-            <p>
-              불확실한 미래에 확실한 나를 표현하는 한 벌. 데뷔 시즌 한정
-              넘버링으로 제작된 Founders Edition은 시간이 흘러도 변하지 않는
-              코드를 담습니다.
-            </p>
-          </details>
-          <details className="rn-pd-details">
-            <summary>MATERIAL</summary>
-            <p>100% Cotton · Made in Korea</p>
-          </details>
+          {product.desc && (
+            <details className="rn-pd-details" open>
+              <summary>DESCRIPTION</summary>
+              <p>{product.desc}</p>
+            </details>
+          )}
+          {product.material && (
+            <details className="rn-pd-details">
+              <summary>MATERIAL</summary>
+              <p>{product.material}</p>
+            </details>
+          )}
           <details className="rn-pd-details">
             <summary>DIRECTOR'S NOTE — 142일의 기록</summary>
             <div className="rn-pd-director">
@@ -932,9 +1020,15 @@ function ProductDetailPage({
           <button type="button" className="rn-cta-ghost">
             WISHLIST
           </button>
-          <button type="button" className="rn-cta-main">
-            ADD TO CART — {product.price}
-          </button>
+          {product.price ? (
+            <button type="button" className="rn-cta-main">
+              ADD TO CART — {product.price}
+            </button>
+          ) : (
+            <button type="button" className="rn-cta-main is-soon" disabled>
+              COMING SOON
+            </button>
+          )}
         </div>
       </div>
     </section>
