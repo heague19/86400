@@ -137,7 +137,6 @@ const ARTIST_ROW: Artist[] = [
     name: 'Juhwan Cheon',
     role: 'Toy',
     photo: juhwanCheonPhoto,
-    cutout: true,
     intro: [],
     instagram: null,
     works: [],
