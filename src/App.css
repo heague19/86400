@@ -191,7 +191,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   color: rgba(255, 255, 255, 0.85);
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 56px;
   font-weight: 900;
   letter-spacing: -1.5px;
@@ -447,7 +447,7 @@
   border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 999px;
   padding: 14px 28px;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -540,7 +540,7 @@
 
 .fig-work-spec dd {
   margin: 0;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: clamp(13px, 1vw, 15px);
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.78);
@@ -559,7 +559,7 @@
 .fig-work-notice {
   margin: 16px 0 0;
   max-width: 46ch;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: clamp(12px, 0.85vw, 13px);
   line-height: 1.7;
   color: rgba(255, 255, 255, 0.45);
@@ -576,7 +576,7 @@
 
 .fig-detail-intro p {
   margin: 0;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: clamp(14px, 1.05vw, 16px);
   font-weight: 400;
   line-height: 1.85;
@@ -633,7 +633,7 @@
   background: transparent;
   border: none;
   padding: 0;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -784,7 +784,7 @@
 }
 
 .product-header h1 {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 56px;
   font-weight: 800;
   color: #111;
@@ -793,7 +793,7 @@
 }
 
 .product-header p {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 3px;
@@ -886,7 +886,7 @@
 }
 
 .product-name {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
   font-weight: 600;
   color: #111;
@@ -895,7 +895,7 @@
 }
 
 .product-meta {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 11px;
   font-weight: 500;
   color: #888;
@@ -905,7 +905,7 @@
 }
 
 .product-price {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
   font-weight: 700;
   color: #111;
@@ -929,7 +929,7 @@
 }
 
 .voices-eyebrow {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 3px;
@@ -939,7 +939,7 @@
 }
 
 .voices-title {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 56px;
   font-weight: 800;
   letter-spacing: -1.5px;
@@ -949,7 +949,7 @@
 }
 
 .voices-sub {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
   font-weight: 400;
   color: #666;
@@ -1007,7 +1007,7 @@
 }
 
 .voice-tag {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -1027,7 +1027,7 @@
 }
 
 .voice-title {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 22px;
   font-weight: 800;
   color: #111;
@@ -1037,7 +1037,7 @@
 }
 
 .voice-excerpt {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 1.7;
@@ -1088,7 +1088,7 @@
 }
 
 .voice-author-role {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 11px;
   font-weight: 500;
   color: #888;
@@ -1107,7 +1107,7 @@
   border: 1px solid #111;
   color: #111;
   padding: 14px 28px;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -1186,7 +1186,7 @@
 }
 
 .feed-tile-tag {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 2.5px;
@@ -1197,7 +1197,7 @@
 
 .feed-tile-title {
   margin: auto 0 0;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 20px;
   font-weight: 800;
   line-height: 1.3;
@@ -1245,7 +1245,7 @@
   position: relative;
   background: #000000;
   color: #ffffff;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .exh-header {
@@ -1509,7 +1509,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .room-info-no {
@@ -1644,7 +1644,7 @@
 }
 
 .voices-page-title {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 88px;
   font-weight: 800;
   letter-spacing: -2.5px;
@@ -1654,7 +1654,7 @@
 }
 
 .voices-page-lede {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 1.7;
@@ -1680,7 +1680,7 @@
   border: 1px solid #d8d8d8;
   border-radius: 999px;
   padding: 10px 20px;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -1841,7 +1841,7 @@
   z-index: 50;
   background: transparent;
   border: none;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 1.5px;
@@ -1868,7 +1868,7 @@
   background: transparent;
   border: none;
   padding: 0 0 16px;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 3px;
@@ -1919,7 +1919,7 @@
 }
 
 .director-title {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 48px;
   font-weight: 800;
   line-height: 1.15;
@@ -1929,7 +1929,7 @@
 }
 
 .director-lede {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 1.7;
@@ -2005,7 +2005,7 @@
 }
 
 .director-section-title {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 4px;
@@ -2077,7 +2077,7 @@
 }
 
 .credit-role {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 2.5px;
@@ -2086,7 +2086,7 @@
 }
 
 .credit-name {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 18px;
   font-weight: 800;
   color: #ffffff;
@@ -2094,7 +2094,7 @@
 }
 
 .credit-quote {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
   font-weight: 500;
   line-height: 1.75;
@@ -2199,7 +2199,7 @@
 }
 
 .detail-tag {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 2.5px;
@@ -2209,7 +2209,7 @@
 }
 
 .detail-title {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 40px;
   font-weight: 800;
   color: #111;
@@ -2219,7 +2219,7 @@
 }
 
 .detail-edition {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 12px;
   font-weight: 500;
   color: #888;
@@ -2229,7 +2229,7 @@
 }
 
 .detail-price {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 22px;
   font-weight: 700;
   color: #111;
@@ -2243,7 +2243,7 @@
 }
 
 .detail-section h4 {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -2264,7 +2264,7 @@
   background: #ffffff;
   border: 1px solid #d0d0d0;
   border-radius: 4px;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 13px;
   font-weight: 600;
   color: #111;
@@ -2279,7 +2279,7 @@
 }
 
 .detail-desc {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
   font-weight: 400;
   color: #444;
@@ -2294,7 +2294,7 @@
   background: #111;
   border: none;
   color: #ffffff;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -2337,7 +2337,7 @@
   background: #000000;
   padding: 200px 64px 160px;
   box-sizing: border-box;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   color: #ffffff;
 }
 
@@ -2420,7 +2420,7 @@
 }
 
 .story-subtitle {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: clamp(20px, 2.4vw, 28px);
   font-weight: 400;
   font-style: italic;
@@ -2590,7 +2590,7 @@
   background: transparent;
   border: none;
   padding: 0 0 12px;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 3px;
@@ -2700,7 +2700,7 @@
 }
 
 .member-role {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 3px;
@@ -2709,7 +2709,7 @@
 }
 
 .member-name {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 24px;
   font-weight: 800;
   letter-spacing: -0.5px;
@@ -2717,7 +2717,7 @@
 }
 
 .member-quote {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 15px;
   font-weight: 400;
   line-height: 1.75;
@@ -2781,7 +2781,7 @@
 }
 
 .studio-role {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 3px;
@@ -2790,7 +2790,7 @@
 }
 
 .studio-name {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.5px;
@@ -2798,7 +2798,7 @@
 }
 
 .studio-quote {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 15px;
   font-weight: 400;
   line-height: 1.7;
@@ -2831,7 +2831,7 @@
 }
 
 .footer-team-role {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -2840,7 +2840,7 @@
 }
 
 .footer-team-name {
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 14px;
   font-weight: 600;
   color: #ffffff;
@@ -3011,7 +3011,7 @@
   backdrop-filter: blur(20px) saturate(160%);
   -webkit-backdrop-filter: blur(20px) saturate(160%);
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .nav-logo {
@@ -3241,7 +3241,7 @@
   background: #0a0a0a;
   color: #d4d4d4;
   padding: 80px 64px 32px;
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .footer-inner {
@@ -3377,7 +3377,7 @@
   padding: 0;
   cursor: pointer;
   color: rgba(255, 255, 255, 0.85);
-  font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Pretendard Variable', Pretendard, 'Helvetica Neue', Arial, sans-serif;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 2px;
