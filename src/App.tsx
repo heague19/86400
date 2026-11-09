@@ -8,7 +8,7 @@ import logoBlack from './assets/86400black.png'
 // 줄인 웹용 사본만 번들에 넣는다.
 import victorLeePhoto from './assets/VictorLeeProfile.jpg'
 import seoHyeonJeonPhoto from './assets/SeoHyeonJeonProfile.jpg'
-import juhwanCheonPhoto from './assets/JuhwanCheonProfile.jpg'
+import juhwanCheonPhoto from './assets/JuhwanCheonProfile.png'
 import joYeonJuPhoto from './assets/JoYeonJuProfile.png'
 import seoHyeonJeonWork01 from './assets/SeoHyeonJeon-Work01.jpg'
 import seoHyeonJeonWork02 from './assets/SeoHyeonJeon-Work02.jpg'
@@ -137,6 +137,7 @@ const ARTIST_ROW: Artist[] = [
     name: 'Juhwan Cheon',
     role: 'Toy',
     photo: juhwanCheonPhoto,
+    cutout: true,
     intro: [],
     instagram: null,
     works: [],
