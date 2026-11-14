@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
+import { COMPANY, FTC_BIZ_INFO_URL } from './company'
+import { BusinessInfo, PrivacyPage, TermsPage } from './legal'
+import { ContactPage, FaqPage, ReturnsPage, ShippingPage } from './support'
 import './App.css'
 import './renewal.css'
 // 워드마크 대신 쓰는 로고. 배경색에 맞춰 둘 중 하나를 고른다.
@@ -25,7 +28,13 @@ type Page =
   | 'artist'
   | 'artistDetail'
   | 'workDetail'
-  | 'product'
+  | 'works'
+  | 'privacy'
+  | 'terms'
+  | 'shipping'
+  | 'returns'
+  | 'faq'
+  | 'contact'
 
 const TEAM = [
   {
@@ -152,7 +161,7 @@ const ARTIST_ROW: Artist[] = [
       '같은 패턴을 매일 다시 그렸다. 사라진 선들이 결국 이 한 벌을 완성했다.',
     ],
     instagram: null,
-    // 86400 펜던트 오브제 — 블랙/실버. 제목·연도·가격은 아직 못 받아 비워둔다.
+    // 86400 키링 오브제 — 블랙/실버. 제목·연도·가격은 아직 못 받아 비워둔다.
     works: [
       {
         image: leeJiMinWork01,
@@ -193,7 +202,7 @@ type Product = {
 /** Vol.01 제품. 화보·스펙이 없는 항목은 비워두면 상세에서 알아서 숨는다. */
 const PRODUCTS: Product[] = [
   {
-    name: '86400 Pendant',
+    name: '86400 Keyring',
     price: null,
     meta: 'Object · Designed by Lee Ji Min',
     images: [leeJiMinWork01, leeJiMinWork02],
@@ -206,24 +215,63 @@ const PRODUCTS: Product[] = [
 ]
 
 /**
+ * 홈·Works 그리드에 올리는 통합 목록. 작가 작품과 제품을 한 줄로 섞는다.
+ * 제목이 없는 작가 작품은 제품 촬영컷이라 제품 쪽으로만 올려 중복을 막는다.
+ */
+type WorkItem =
+  | { kind: 'work'; artistIndex: number; workIndex: number }
+  | { kind: 'product'; productIndex: number }
+
+const WORK_ITEMS: WorkItem[] = [
+  ...ARTIST_ROW.flatMap((artist, artistIndex) =>
+    artist.works.flatMap((work, workIndex) =>
+      work.title !== null
+        ? [{ kind: 'work' as const, artistIndex, workIndex }]
+        : []
+    )
+  ),
+  ...PRODUCTS.map((_, productIndex) => ({
+    kind: 'product' as const,
+    productIndex,
+  })),
+]
+
+/**
  * COMING SOON 랜딩(시계 화면) 스위치.
  * false 면 진입 즉시 MAIN 으로 들어가고 좌상단 토글도 숨긴다.
  * 다시 열려면 이 값만 true 로 되돌리면 된다.
  */
 const COMING_SOON = false
 
+/** 약관·처리방침은 외부(결제사 심사, 공정위 등)에서 바로 열 수 있게 #terms, #privacy 로 진입을 허용한다. */
+const DEEP_LINK_PAGES = ['privacy', 'terms', 'shipping', 'returns', 'faq', 'contact'] as const
+type DeepLinkPage = (typeof DEEP_LINK_PAGES)[number]
+
+function initialPage(): Page {
+  const hash = window.location.hash.replace('#', '')
+  return (DEEP_LINK_PAGES as readonly string[]).includes(hash) ? (hash as DeepLinkPage) : 'collection'
+}
+
 function App() {
   const ticks = Array.from({ length: 12 }, (_, i) => i)
   const [now, setNow] = useState(new Date())
   const [opened, setOpened] = useState(!COMING_SOON)
-  const [page, setPage] = useState<Page>('collection')
+  const [page, setPage] = useState<Page>(initialPage)
   const [selectedProduct, setSelectedProduct] = useState<number | null>(null)
   const [selectedArtist, setSelectedArtist] = useState<number | null>(null)
   const [selectedWork, setSelectedWork] = useState<number | null>(null)
+  const [cookieOpen, setCookieOpen] = useState(false)
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000)
     return () => clearInterval(id)
+  }, [])
+
+  // 쿠키 동의가 저장돼 있지 않으면 첫 화면이 자리 잡은 뒤 모달을 띄운다.
+  useEffect(() => {
+    if (readCookieConsent()) return
+    const id = setTimeout(() => setCookieOpen(true), 1200)
+    return () => clearTimeout(id)
   }, [])
 
   // 페이지 전환은 라우터 없이 state 로 하니 스크롤을 직접 올려준다.
@@ -256,7 +304,13 @@ function App() {
     setSelectedWork(null)
     setPage('artistDetail')
   }
-  const goProduct = () => setPage('product')
+  const goWorks = () => setPage('works')
+  // 홈·Works 그리드에서 작가 작품을 바로 연다. 뒤로 가면 그 작가 상세로 간다.
+  const openArtistWork = (artistIndex: number, workIndex: number) => {
+    setSelectedArtist(artistIndex)
+    setSelectedWork(workIndex)
+    setPage('workDetail')
+  }
   const goExhibition = () => setPage('exhibition')
   const openProduct = (i: number) => {
     setSelectedProduct(i)
@@ -345,7 +399,7 @@ function App() {
             onLogoClick={goCollection}
             onStoryClick={goStory}
             onArtistClick={goArtist}
-            onProductClick={goProduct}
+            onWorksClick={goWorks}
           />
 
           {page === 'collection' && (
@@ -353,6 +407,8 @@ function App() {
               onOpenArtist={openArtist}
               onOpenArtistList={goArtist}
               onOpenProduct={openProduct}
+              onOpenWork={openArtistWork}
+              onOpenWorks={goWorks}
             />
           )}
 
@@ -363,7 +419,9 @@ function App() {
             />
           )}
 
-          {page === 'product' && <ProductPage onOpenProduct={openProduct} />}
+          {page === 'works' && (
+            <WorksPage onOpenProduct={openProduct} onOpenWork={openArtistWork} />
+          )}
 
           {page === 'artistDetail' && selectedArtist !== null && (
             <ArtistDetailPage
@@ -392,9 +450,24 @@ function App() {
 
           {page === 'story' && <BrandPage />}
 
-          <Footer />
+          {page === 'privacy' && <PrivacyPage />}
+          {page === 'terms' && <TermsPage />}
+          {page === 'shipping' && <ShippingPage />}
+          {page === 'returns' && <ReturnsPage />}
+          {page === 'faq' && <FaqPage />}
+          {page === 'contact' && <ContactPage />}
+
+          <Footer
+            onCookieSettings={() => setCookieOpen(true)}
+            onNavigate={(next) => {
+              setSelectedProduct(null)
+              setPage(next)
+            }}
+          />
         </>
       )}
+
+      <CookieConsent open={cookieOpen} onClose={() => setCookieOpen(false)} />
     </div>
   )
 }
@@ -458,7 +531,7 @@ const ROOMS = [
  */
 /**
  * 홈 히어로 — 광고 배너 캐로셀.
- * 1번: 아티스트/브랜드 배너(기존 히어로 그대로), 2번: 제품 배너(86400 Pendant).
+ * 1번: 아티스트/브랜드 배너(기존 히어로 그대로), 2번: 제품 배너(86400 Keyring).
  * 배너를 더 올리려면 slides 배열에 추가하면 된다. 6초마다 자동 전환.
  */
 type HeroSlide = {
@@ -551,16 +624,16 @@ function HomeHero({
       ),
     },
     {
-      key: 'pendant',
+      key: 'keyring',
       image: leeJiMinWork02,
       label: '상품 배너',
-      cta: { label: 'VIEW PRODUCT →', go: () => onOpenProduct(0) },
+      cta: { label: 'VIEW WORK →', go: () => onOpenProduct(0) },
       body: (
         <>
           <span className="rn-eyebrow">
-            Vol.01 — Product No.001 · Coming Soon
+            Vol.01 — Object No.001 · Coming Soon
           </span>
-          <h2 className="rn-hero-title">86400 Pendant</h2>
+          <h2 className="rn-hero-title">86400 Keyring</h2>
           <span className="rn-hero-tagline">
             Object — Designed by Lee Ji Min
           </span>
@@ -658,16 +731,19 @@ function HomePage({
   onOpenArtist,
   onOpenArtistList,
   onOpenProduct,
+  onOpenWork,
+  onOpenWorks,
 }: {
   onOpenArtist: (index: number) => void
   onOpenArtistList: () => void
   onOpenProduct: (index: number) => void
+  onOpenWork: (artistIndex: number, workIndex: number) => void
+  onOpenWorks: () => void
 }) {
   // 홈에 세우는 에디토리얼 밴드. 소개글이 있는 아티스트만 올라간다.
   const bands = ARTIST_ROW.map((artist, index) => ({ artist, index })).filter(
     ({ artist }) => artist.intro.length > 0
   )
-
   return (
     <section className="rn-home">
       <HomeHero
@@ -705,38 +781,14 @@ function HomePage({
         </Reveal>
       ))}
 
-      <div className="rn-products">
-        <div className="rn-products-head">
-          <h2>Product</h2>
-          <span>VOL.01 — EDITION OF 100</span>
-        </div>
-        {PRODUCTS.slice(0, 2).map((p, i) => (
-          <Reveal key={p.name}>
-          <button
-            type="button"
-            className={`rn-prod-row ${i % 2 === 1 ? 'is-reverse' : ''}`}
-            onClick={() => onOpenProduct(i)}
-          >
-            <span className="rn-prod-caption">
-              <span className="rn-prod-no">
-                No.{String(i + 1).padStart(3, '0')}
-              </span>
-              <span className="rn-prod-name">{p.name}</span>
-              <span className="rn-prod-meta">
-                {p.price ?? '가격 미정'} · {p.meta}
-              </span>
-            </span>
-            <span className="rn-prod-ph">
-              {p.images[0] ? (
-                <img src={p.images[0]} alt={p.name} />
-              ) : (
-                <>No.{String(i + 1).padStart(3, '0')}</>
-              )}
-            </span>
-          </button>
-          </Reveal>
-        ))}
-      </div>
+      <WorksGrid
+        items={WORK_ITEMS.slice(0, 8)}
+        eyebrow="Vol.01"
+        heading="Works"
+        onOpenMore={onOpenWorks}
+        onOpenWork={onOpenWork}
+        onOpenProduct={onOpenProduct}
+      />
 
       <div className="rn-partners">
         <span className="rn-eyebrow">Partner</span>
@@ -1053,31 +1105,120 @@ function WorkDetailPage({
 /**
  * Product 목록 — 흰 배경 카드 3열(기존 레이아웃 유지).
  */
-function ProductPage({ onOpenProduct }: { onOpenProduct: (index: number) => void }) {
+/** 그리드 타일 한 장에 필요한 표시값. 작가 작품과 제품을 같은 모양으로 맞춘다. */
+function describeWorkItem(
+  item: WorkItem,
+  onOpenWork: (artistIndex: number, workIndex: number) => void,
+  onOpenProduct: (index: number) => void
+) {
+  if (item.kind === 'work') {
+    const artist = ARTIST_ROW[item.artistIndex]
+    const work = artist.works[item.workIndex]
+    return {
+      key: `work-${item.artistIndex}-${item.workIndex}`,
+      image: work.image,
+      title: work.title ?? `${artist.name} — Work ${item.workIndex + 1}`,
+      by: artist.name,
+      kindLabel: artist.role === 'paint' ? 'Painting' : artist.role,
+      price:
+        work.price !== null
+          ? `₩${work.price.toLocaleString('ko-KR')}`
+          : '가격 미정',
+      // 그림은 비율이 제각각이라 잘라내지 않고 패널 위에 통째로 올린다.
+      isArt: true,
+      go: () => onOpenWork(item.artistIndex, item.workIndex),
+    }
+  }
+  const p = PRODUCTS[item.productIndex]
+  return {
+    key: `product-${item.productIndex}`,
+    image: p.images[0],
+    title: p.name,
+    by: p.meta.replace(/^.*Designed by\s*/, ''),
+    kindLabel: 'Object',
+    price: p.price ?? '가격 미정 · Coming Soon',
+    isArt: false,
+    go: () => onOpenProduct(item.productIndex),
+  }
+}
+
+/** 홈과 Works 페이지가 같이 쓰는 작품 그리드. */
+function WorksGrid({
+  items,
+  eyebrow,
+  heading,
+  count,
+  onOpenMore,
+  onOpenWork,
+  onOpenProduct,
+}: {
+  items: WorkItem[]
+  eyebrow: string
+  heading: string
+  /** 오른쪽 위에 세울 개수 문구. onOpenMore 가 있으면 링크가 대신 선다. */
+  count?: string
+  onOpenMore?: () => void
+  onOpenWork: (artistIndex: number, workIndex: number) => void
+  onOpenProduct: (index: number) => void
+}) {
   return (
-    <section className="fig-product-page">
-      <div className="fig-grid">
-        {PRODUCTS.map((p, i) => (
-          <button
-            key={p.name}
-            type="button"
-            className="fig-card"
-            onClick={() => onOpenProduct(i)}
-          >
-            <div className="fig-card-frame">
-              <div className="fig-card-media">
-                {p.images[0] && <img src={p.images[0]} alt={p.name} />}
-              </div>
-              <span className="fig-card-index">
-                No.{String(i + 1).padStart(3, '0')}
-              </span>
-            </div>
-            <div className="fig-card-caption">
-              <span className="fig-card-name">{p.name}</span>
-            </div>
+    <div className="rn-works">
+      <div className="rn-works-head">
+        <div className="rn-works-title">
+          <span className="rn-eyebrow">{eyebrow}</span>
+          <h2>{heading}</h2>
+        </div>
+        {onOpenMore ? (
+          <button type="button" className="rn-link" onClick={onOpenMore}>
+            ALL WORKS →
           </button>
-        ))}
+        ) : (
+          count && <span className="rn-works-count">{count}</span>
+        )}
       </div>
+      <div className="rn-works-grid">
+        {items.map((item) => {
+          const v = describeWorkItem(item, onOpenWork, onOpenProduct)
+          return (
+            <Reveal key={v.key}>
+            <button type="button" className="rn-work-tile" onClick={v.go}>
+              <span className={`rn-work-ph ${v.isArt ? 'is-art' : ''}`}>
+                {v.image && <img src={v.image} alt={v.title} />}
+              </span>
+              <span className="rn-work-cap">
+                <span className="rn-work-name">{v.title}</span>
+                <span className="rn-work-by">
+                  {v.by} · {v.kindLabel}
+                </span>
+                <span className="rn-work-price">{v.price}</span>
+              </span>
+            </button>
+            </Reveal>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+/** Works — 작가 작품과 제품을 한 그리드에. 상단 메뉴 WORKS 가 여기로 온다. */
+function WorksPage({
+  onOpenProduct,
+  onOpenWork,
+}: {
+  onOpenProduct: (index: number) => void
+  onOpenWork: (artistIndex: number, workIndex: number) => void
+}) {
+  return (
+    <section className="rn-works-page">
+      <WorksGrid
+        items={WORK_ITEMS}
+        eyebrow="Vol.01 — New Season"
+        heading="Works"
+        count={`${WORK_ITEMS.length} WORKS`}
+        onOpenWork={onOpenWork}
+        onOpenProduct={onOpenProduct}
+      />
     </section>
   )
 }
@@ -1693,14 +1834,14 @@ function GlobalNav({
   onLogoClick,
   onStoryClick,
   onArtistClick,
-  onProductClick,
+  onWorksClick,
 }: {
   dark?: boolean
   solid?: boolean
   onLogoClick: () => void
   onStoryClick: () => void
   onArtistClick: () => void
-  onProductClick: () => void
+  onWorksClick: () => void
 }) {
   // 좁은 화면에선 메뉴가 숨겨지므로 오른쪽에서 나오는 서랍으로 대신한다.
   const [menuOpen, setMenuOpen] = useState(false)
@@ -1731,7 +1872,7 @@ function GlobalNav({
   const menu = [
     { label: 'Brand', go: onStoryClick },
     { label: 'Artist', go: onArtistClick },
-    { label: 'Product', go: onProductClick },
+    { label: 'Works', go: onWorksClick },
   ]
 
   return (
@@ -1750,7 +1891,7 @@ function GlobalNav({
         {/* 네비는 밝은 스킨/어두운 스킨 두 가지라 로고도 같이 반전시킨다. */}
         <img src={dark || solid ? logoWhite : logoBlack} alt="86400" />
       </button>
-      {/* 시안 Frame 768: Brand · Artist · Product */}
+      {/* Brand · Artist · Works — 작품과 제품을 Works 하나로 묶었다. */}
       <ul className="nav-menu">
         {menu.map((m) => (
           <li key={m.label}>
@@ -1838,8 +1979,30 @@ function GlobalNav({
   )
 }
 
-function Footer() {
+/** 푸터 — 메뉴 열은 내부 페이지로, Follow 는 외부 링크로. 아직 없는 채널은 '준비 중'으로 둔다. */
+function Footer({
+  onCookieSettings,
+  onNavigate,
+}: {
+  onCookieSettings: () => void
+  onNavigate: (page: Page) => void
+}) {
   const year = new Date().getFullYear()
+  const go = (page: Page) => () => onNavigate(page)
+  const nav = (label: string, page: Page) => (
+    <li>
+      <button type="button" className="footer-nav" onClick={go(page)}>
+        {label}
+      </button>
+    </li>
+  )
+  const soon = (label: string) => (
+    <li>
+      <span className="footer-soon">
+        {label} <small>준비 중</small>
+      </span>
+    </li>
+  )
   return (
     <footer className="site-footer">
       <div className="footer-inner">
@@ -1856,31 +2019,36 @@ function Footer() {
           <div className="footer-col">
             <h4>Shop</h4>
             <ul>
-              <li><a href="#archive">Archive</a></li>
+              {nav('Works', 'works')}
+              {soon('Archive')}
             </ul>
           </div>
           <div className="footer-col">
             <h4>About</h4>
             <ul>
-              <li><a href="#story">Story</a></li>
-              <li><a href="#process">Process</a></li>
-              <li><a href="#contact">Contact</a></li>
+              {nav('Story', 'story')}
+              {nav('Artist', 'artist')}
+              {nav('Contact', 'contact')}
             </ul>
           </div>
           <div className="footer-col">
             <h4>Help</h4>
             <ul>
-              <li><a href="#shipping">Shipping</a></li>
-              <li><a href="#returns">Returns</a></li>
-              <li><a href="#faq">FAQ</a></li>
+              {nav('Shipping', 'shipping')}
+              {nav('Returns', 'returns')}
+              {nav('FAQ', 'faq')}
             </ul>
           </div>
           <div className="footer-col">
             <h4>Follow</h4>
             <ul>
-              <li><a href="#instagram">Instagram</a></li>
-              <li><a href="#wadiz">Wadiz</a></li>
-              <li><a href="#newsletter">Newsletter</a></li>
+              <li>
+                <a href={COMPANY.instagram} target="_blank" rel="noopener noreferrer">
+                  Instagram
+                </a>
+              </li>
+              {soon('Wadiz')}
+              {soon('Newsletter')}
             </ul>
           </div>
         </div>
@@ -1895,13 +2063,155 @@ function Footer() {
         ))}
       </div>
 
+      {/* 전자상거래법 제10조 — 사이버몰 운영자 신원정보. 모든 페이지 하단에 같은 내용이 보인다. */}
+      <div className="footer-legal">
+        <BusinessInfo className="footer-biz" />
+        <div className="footer-legal-links">
+          <button type="button" onClick={go('terms')}>이용약관</button>
+          <button type="button" className="is-privacy" onClick={go('privacy')}>
+            개인정보처리방침
+          </button>
+          <button type="button" onClick={onCookieSettings}>쿠키 설정</button>
+          <a href={FTC_BIZ_INFO_URL} target="_blank" rel="noopener noreferrer">
+            사업자정보확인 ↗
+          </a>
+        </div>
+      </div>
+
       <div className="footer-bottom">
-        <p>© {year} 86400. All rights reserved.</p>
-        <p className="footer-meta">
-          사업자등록번호 000-00-00000 · 통신판매업 신고 제0000-호
-        </p>
+        <p>© {year} {COMPANY.brand}. All rights reserved.</p>
+        <p>{COMPANY.brand}는 통신판매 당사자로서 상품, 상품정보, 거래에 관한 책임을 집니다.</p>
       </div>
     </footer>
+  )
+}
+
+/* ---------- 쿠키 동의 ---------- */
+
+const COOKIE_CONSENT_KEY = '86400-cookie-consent'
+
+type CookieConsentValue = {
+  /** 방문 통계용 분석 쿠키 허용 여부. 필수 쿠키는 항상 사용. */
+  analytics: boolean
+  at: string
+}
+
+/** 저장된 동의. 없거나 깨져 있으면 null → 모달을 다시 띄운다. */
+function readCookieConsent(): CookieConsentValue | null {
+  try {
+    const raw = window.localStorage.getItem(COOKIE_CONSENT_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as Partial<CookieConsentValue>
+    if (typeof parsed.analytics !== 'boolean') return null
+    return { analytics: parsed.analytics, at: parsed.at ?? '' }
+  } catch {
+    return null
+  }
+}
+
+function writeCookieConsent(analytics: boolean) {
+  try {
+    window.localStorage.setItem(
+      COOKIE_CONSENT_KEY,
+      JSON.stringify({ analytics, at: new Date().toISOString() }),
+    )
+  } catch {
+    // 사생활 보호 모드 등으로 저장이 막혀도 모달만 닫는다.
+  }
+}
+
+/**
+ * 쿠키 동의 모달. 왼쪽 아래 카드형으로 떠서 콘텐츠를 가리지 않는다.
+ * 첫 방문(저장된 동의 없음)에 자동으로 열리고, 푸터 '쿠키 설정'으로 다시 열 수 있다.
+ */
+function CookieConsent({ open, onClose }: { open: boolean; onClose: () => void }) {
+  // 열릴 때마다 패널을 새로 마운트해 저장된 동의값으로 초기화한다.
+  return open ? <CookieConsentPanel onClose={onClose} /> : null
+}
+
+function CookieConsentPanel({ onClose }: { onClose: () => void }) {
+  const [detail, setDetail] = useState(false)
+  const [analytics, setAnalytics] = useState(() => readCookieConsent()?.analytics ?? true)
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
+
+  const save = (value: boolean) => {
+    writeCookieConsent(value)
+    setDetail(false)
+    onClose()
+  }
+
+  return (
+    <aside
+      className="rn-cookie"
+      role="dialog"
+      aria-labelledby="rn-cookie-title"
+      aria-describedby="rn-cookie-body"
+    >
+      <span className="rn-eyebrow">Cookies</span>
+      <h2 id="rn-cookie-title" className="rn-cookie-title">
+        쿠키를 사용합니다
+      </h2>
+      <p id="rn-cookie-body" className="rn-cookie-body">
+        86400은 사이트 동작에 필요한 필수 쿠키와, 방문 통계를 위한 분석 쿠키를
+        사용합니다. 분석 쿠키는 동의한 경우에만 저장됩니다.
+      </p>
+
+      <button
+        type="button"
+        className="rn-link rn-cookie-more"
+        aria-expanded={detail}
+        onClick={() => setDetail((v) => !v)}
+      >
+        {detail ? '접기 ↑' : '자세히 보기 ↓'}
+      </button>
+
+      {detail && (
+        <ul className="rn-cookie-list">
+          <li>
+            <span className="rn-cookie-row">
+              <span className="rn-cookie-name">필수</span>
+              <span className="rn-cookie-state">항상 사용</span>
+            </span>
+            <span className="rn-cookie-desc">
+              화면 설정, 동의 여부 저장 등 사이트가 동작하는 데 필요합니다.
+            </span>
+          </li>
+          <li>
+            <label className="rn-cookie-row">
+              <span className="rn-cookie-name">분석</span>
+              <input
+                type="checkbox"
+                checked={analytics}
+                onChange={(e) => setAnalytics(e.target.checked)}
+              />
+            </label>
+            <span className="rn-cookie-desc">
+              방문 수와 페이지 이동 통계를 익명으로 수집합니다.
+            </span>
+          </li>
+        </ul>
+      )}
+
+      <div className="rn-cookie-actions">
+        <button type="button" className="rn-cookie-ghost" onClick={() => save(false)}>
+          필수만 허용
+        </button>
+        <button
+          type="button"
+          className="rn-cookie-main"
+          onClick={() => save(detail ? analytics : true)}
+        >
+          {detail ? '선택 저장' : '모두 허용'}
+        </button>
+      </div>
+    </aside>
   )
 }
 

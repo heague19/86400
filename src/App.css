@@ -3319,6 +3319,110 @@
   color: #ffffff;
 }
 
+/* 푸터 메뉴 — 내부 페이지는 버튼이지만 링크와 같은 모양 */
+.footer-nav {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #aaa;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.footer-nav:hover {
+  color: #ffffff;
+}
+
+.footer-soon {
+  font-size: 13px;
+  font-weight: 500;
+  color: #555;
+  letter-spacing: 0.2px;
+  cursor: default;
+}
+
+.footer-soon small {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #444;
+  margin-left: 4px;
+}
+
+.footer-biz-soon {
+  color: #777;
+}
+
+
+/* 전자상거래법 제10조 사업자 표시 + 법정 링크 */
+.footer-legal {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.footer-biz {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+}
+
+.footer-biz-item {
+  display: flex;
+  gap: 6px;
+  font-size: 11px;
+  letter-spacing: 0.2px;
+  line-height: 1.6;
+}
+
+.footer-biz-item dt {
+  color: #666;
+}
+
+.footer-biz-item dd {
+  margin: 0;
+  color: #9a9a9a;
+}
+
+.footer-legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+}
+
+.footer-legal-links button,
+.footer-legal-links a {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  color: #aaa;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+/* 개인정보처리방침은 다른 고지와 구분되게 (개인정보보호법 시행령 제31조) */
+.footer-legal-links .is-privacy {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.footer-legal-links button:hover,
+.footer-legal-links a:hover {
+  color: #ffffff;
+}
+
 .footer-bottom {
   max-width: 1400px;
   margin: 0 auto;
