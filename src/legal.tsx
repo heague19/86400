@@ -1,9 +1,11 @@
 import type { ReactNode } from 'react'
 import { COMPANY } from './company'
+import { useLang } from './i18n'
 
 /** 아직 못 채운 값은 숨기지 말고 '입력 필요'로 드러낸다. 배포 전 점검용. */
 export function Pending({ label }: { label: string }) {
-  return <mark className="rn-pending">입력 필요: {label}</mark>
+  const { tx } = useLang()
+  return <mark className="rn-pending">{tx('입력 필요: {label}', { label: tx(label) })}</mark>
 }
 
 function valueOrPending(value: string, label: string): ReactNode {
@@ -12,6 +14,7 @@ function valueOrPending(value: string, label: string): ReactNode {
 
 /** 푸터에 쓰는 사업자 표시 목록. 전자상거래법 제10조 항목 순서대로. */
 export function BusinessInfo({ className }: { className?: string }) {
+  const { tx } = useLang()
   const rows: { label: string; value: ReactNode }[] = [
     { label: '상호', value: COMPANY.legalName },
     { label: '대표자', value: COMPANY.ceo },
@@ -23,10 +26,10 @@ export function BusinessInfo({ className }: { className?: string }) {
           {COMPANY.mailOrderNo} ({valueOrPending(COMPANY.mailOrderOffice, '신고기관')})
         </>
       ) : (
-        <span className="footer-biz-soon">신고 준비 중</span>
+        <span className="footer-biz-soon">{tx('신고 준비 중')}</span>
       ),
     },
-    { label: '주소', value: valueOrPending(COMPANY.address, '영업소 주소') },
+    { label: '주소', value: valueOrPending(tx(COMPANY.address), '영업소 주소') },
     { label: '전화', value: valueOrPending(COMPANY.phone, '전화번호') },
     { label: '이메일', value: valueOrPending(COMPANY.email, '이메일') },
     { label: '호스팅 제공자', value: COMPANY.hosting },
@@ -36,7 +39,7 @@ export function BusinessInfo({ className }: { className?: string }) {
     <dl className={className}>
       {rows.map((row) => (
         <div key={row.label} className="footer-biz-item">
-          <dt>{row.label}</dt>
+          <dt>{tx(row.label)}</dt>
           <dd>{row.value}</dd>
         </div>
       ))}
@@ -60,13 +63,18 @@ export function LegalLayout({
   dated?: boolean
   children: ReactNode
 }) {
+  const { tx, lang } = useLang()
   return (
     <section className="rn-legal">
       <header className="rn-legal-head">
         <span className="rn-eyebrow">{eyebrow}</span>
         <h1>{title}</h1>
         <p className="rn-legal-lead">{lead}</p>
-        {dated && <p className="rn-legal-date">시행일 {COMPANY.effectiveDate}</p>}
+        {dated && <p className="rn-legal-date">{tx('시행일 {date}', { date: tx(COMPANY.effectiveDate) })}</p>}
+        {/* 약관·처리방침 본문은 한국어만 둔다 — 법적 효력 기준 문서라 번역본을 원문처럼 보이게 하지 않는다. */}
+        {dated && lang !== 'ko' && (
+          <p className="rn-legal-notice">{tx('이 페이지는 한국어로만 제공됩니다. 법적 효력은 한국어 원문을 기준으로 합니다.')}</p>
+        )}
       </header>
       <article className="rn-legal-body">{children}</article>
     </section>

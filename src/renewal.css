@@ -228,7 +228,8 @@
 }
 
 .rn-hero-logo {
-  width: min(430px, 72vw);
+  /* 가로 조합형 로고(마크 + 86400) */
+  width: min(520px, 76vw);
 }
 
 .rn-hero-tagline {
@@ -1476,8 +1477,9 @@
   color: var(--rn-ink);
 }
 
+/* 스토리 끝에 찍는 도장 — 엠블럼 마크만 크게 */
 .rn-brand-finale img {
-  height: 20px;
+  height: 56px;
 }
 
 /* ---------- 애니메이션 공용 ---------- */
@@ -1721,6 +1723,16 @@
 }
 
 /* 아직 못 채운 값 — 배포 전 눈에 띄게 */
+.rn-legal-notice {
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  border-left: 2px solid #f0c060;
+  background: #15120a;
+  color: #e8d9a8;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 .rn-pending {
   display: inline-block;
   padding: 1px 6px;

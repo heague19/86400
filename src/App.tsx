@@ -2,16 +2,20 @@ import { useEffect, useRef, useState } from 'react'
 import { COMPANY, FTC_BIZ_INFO_URL } from './company'
 import { BusinessInfo, PrivacyPage, TermsPage } from './legal'
 import { ContactPage, FaqPage, ReturnsPage, ShippingPage } from './support'
+import { useLang } from './i18n'
+import { LANGS } from './lang'
+import type { Lang } from './lang'
 import './App.css'
 import './renewal.css'
-// 워드마크 대신 쓰는 로고. 배경색에 맞춰 둘 중 하나를 고른다.
+// 로고 — 엠블럼(마크)과 가로 조합형(마크 + 86400 워드마크). 배경색에 맞춰 검정/흰을 고른다.
+// 네비·푸터처럼 가로로 긴 자리는 조합형, 큰 면이나 정사각(파비콘·브랜드 피날레)은 마크.
 import logoWhite from './assets/86400white.png'
-import logoBlack from './assets/86400black.png'
+import lockupWhite from './assets/86400-lockup-white.png'
+import lockupBlack from './assets/86400-lockup-black.png'
 // 원본(6.8MB PNG / 1.9K 정사각)은 리포 루트에 그대로 두고, 카드 크기에 맞춰
 // 줄인 웹용 사본만 번들에 넣는다.
 import victorLeePhoto from './assets/VictorLeeProfile.jpg'
 import seoHyeonJeonPhoto from './assets/SeoHyeonJeonProfile.jpg'
-import juhwanCheonPhoto from './assets/JuhwanCheonProfile.png'
 import leeJiMinPhoto from './assets/LeeJiMinProfile.png'
 import leeJiMinWork01 from './assets/LeeJiMin-Work01.png'
 import leeJiMinWork02 from './assets/LeeJiMin-Work02.png'
@@ -146,14 +150,6 @@ const ARTIST_ROW: Artist[] = [
     ],
   },
   {
-    name: 'Juhwan Cheon',
-    role: 'Toy / Dev Art',
-    photo: juhwanCheonPhoto,
-    intro: [],
-    instagram: null,
-    works: [],
-  },
-  {
     name: 'Lee Ji Min',
     role: 'Designer',
     photo: leeJiMinPhoto,
@@ -187,7 +183,7 @@ const ARTIST_ROW: Artist[] = [
 
 type Product = {
   name: string
-  /** null 이면 가격 미정 — 상세의 CTA 가 COMING SOON 으로 바뀐다. */
+  /** null 이면 아직 오픈 전 — 그리드·상세에 '오픈 예정' 으로 나간다. */
   price: string | null
   meta: string
   /** 제품 화보. 비어 있으면 넘버링 플레이스홀더가 나간다. */
@@ -317,6 +313,23 @@ function App() {
     setPage('detail')
   }
 
+  // 홈 맨 위(스크롤 0)에선 네비를 숨겼다가 스크롤이 시작되면 내린다.
+  const [atTop, setAtTop] = useState(true)
+  useEffect(() => {
+    if (page !== 'collection') return
+    let raf = 0
+    const onScroll = () => {
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(() => setAtTop(window.scrollY < 24))
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', onScroll)
+    }
+  }, [page])
+  const hiddenNav = page === 'collection' && atTop
   // 리뉴얼은 전 페이지 다크 본문이라 네비도 항상 다크 스킨.
   const darkNav = opened
 
@@ -396,6 +409,7 @@ function App() {
         <>
           <GlobalNav
             dark={darkNav}
+            hidden={hiddenNav}
             onLogoClick={goCollection}
             onStoryClick={goStory}
             onArtistClick={goArtist}
@@ -525,11 +539,6 @@ const ROOMS = [
 ]
 
 /**
- * 홈 — A안 '풀블리드 에디토리얼'.
- * 풀스크린 히어로(키 비주얼 = 전서현 '상') 아래 아티스트 에디토리얼 밴드가
- * 좌우 교차로 이어지고, 제품은 비대칭 스태거 배치.
- */
-/**
  * 홈 히어로 — 광고 배너 캐로셀.
  * 1번: 아티스트/브랜드 배너(기존 히어로 그대로), 2번: 제품 배너(86400 Keyring).
  * 배너를 더 올리려면 slides 배열에 추가하면 된다. 6초마다 자동 전환.
@@ -553,6 +562,7 @@ function HomeHero({
   onOpenArtist: (index: number) => void
   onOpenProduct: (index: number) => void
 }) {
+  const { tx } = useLang()
   const slides: HeroSlide[] = [
     {
       key: 'artist',
@@ -564,9 +574,9 @@ function HomeHero({
           <span className="rn-eyebrow">
             Vol.01 — New Season · Founders Edition
           </span>
-          <img className="rn-hero-logo" src={logoWhite} alt="86400" />
+          <img className="rn-hero-logo" src={lockupWhite} alt="86400" />
           <span className="rn-hero-tagline">
-            불확실한 미래에 확실한 나를 보여주는
+            {tx('불확실한 미래에 확실한 나를 보여주는')}
           </span>
         </>
       ),
@@ -631,7 +641,7 @@ function HomeHero({
       body: (
         <>
           <span className="rn-eyebrow">
-            Vol.01 — Object No.001 · Coming Soon
+            Vol.01 — Object No.001 · {tx('오픈 예정')}
           </span>
           <h2 className="rn-hero-title">86400 Keyring</h2>
           <span className="rn-hero-tagline">
@@ -694,7 +704,7 @@ function HomeHero({
         type="button"
         className="rn-hero-arrow is-prev"
         onClick={prev}
-        aria-label="이전 배너"
+        aria-label={tx('이전 배너')}
       >
         ←
       </button>
@@ -702,7 +712,7 @@ function HomeHero({
         type="button"
         className="rn-hero-arrow is-next"
         onClick={next}
-        aria-label="다음 배너"
+        aria-label={tx('다음 배너')}
       >
         →
       </button>
@@ -714,7 +724,7 @@ function HomeHero({
             type="button"
             className={i === cur ? 'is-active' : ''}
             onClick={() => setCur(i)}
-            aria-label={`${s.label}로 이동`}
+            aria-label={tx('{label} 배너로 이동', { label: s.label })}
           />
         ))}
       </div>
@@ -740,6 +750,7 @@ function HomePage({
   onOpenWork: (artistIndex: number, workIndex: number) => void
   onOpenWorks: () => void
 }) {
+  const { tx } = useLang()
   // 홈에 세우는 에디토리얼 밴드. 소개글이 있는 아티스트만 올라간다.
   const bands = ARTIST_ROW.map((artist, index) => ({ artist, index })).filter(
     ({ artist }) => artist.intro.length > 0
@@ -759,7 +770,7 @@ function HomePage({
             type="button"
             className={`rn-band-media ${artist.cutout ? 'is-panel' : ''}`}
             onClick={() => onOpenArtist(index)}
-            aria-label={`${artist.name} 아티스트 페이지로`}
+            aria-label={tx('{name} 아티스트 페이지로', { name: artist.name })}
           >
             {artist.photo && <img src={artist.photo} alt={artist.name} />}
           </button>
@@ -768,7 +779,7 @@ function HomePage({
               Artist — No.{String(index + 1).padStart(2, '0')}
             </span>
             <h2 className="rn-band-name">{artist.name}</h2>
-            <p className="rn-band-quote">{artist.intro[0]}</p>
+            <p className="rn-band-quote">{tx(artist.intro[0])}</p>
             <button
               type="button"
               className="rn-link"
@@ -839,6 +850,7 @@ function ArtistPage({
   onOpenExhibition: () => void
   onOpenArtist: (index: number) => void
 }) {
+  const { tx } = useLang()
   return (
     <section className="rn-acc-page">
       <div className="rn-acc">
@@ -858,7 +870,7 @@ function ArtistPage({
                 No.{String(i + 1).padStart(2, '0')} · {a.role}
               </span>
               <strong>{a.name}</strong>
-              {a.intro[0] && <span>{a.intro[0]}</span>}
+              {a.intro[0] && <span>{tx(a.intro[0])}</span>}
             </span>
           </button>
         ))}
@@ -921,6 +933,7 @@ function ArtistDetailPage({
   onBack: () => void
   onOpenWork: (index: number) => void
 }) {
+  const { tx } = useLang()
   return (
     <section className="rn-ad">
       <div className={`rn-ad-hero ${artist.cutout ? 'is-panel' : ''}`}>
@@ -955,7 +968,7 @@ function ArtistDetailPage({
         <div className="rn-ad-statement">
           <span className="rn-eyebrow">Statement</span>
           <div className="rn-ad-statement-body">
-            <Prose paragraphs={artist.intro} />
+            <Prose paragraphs={artist.intro.map((p) => tx(p))} />
           </div>
         </div>
         </Reveal>
@@ -977,10 +990,10 @@ function ArtistDetailPage({
               >
                 <img
                   src={work.image}
-                  alt={work.title ?? `${artist.name} — Work ${i + 1}`}
+                  alt={work.title ? tx(work.title) : `${artist.name} — Work ${i + 1}`}
                 />
                 <span className="rn-strip-cap">
-                  <strong>{work.title ?? `No.${String(i + 1).padStart(2, '0')}`}</strong>
+                  <strong>{work.title ? tx(work.title) : `No.${String(i + 1).padStart(2, '0')}`}</strong>
                   <span>
                     {[work.year, work.price !== null ? `₩${work.price.toLocaleString('ko-KR')}` : null]
                       .filter(Boolean)
@@ -1009,6 +1022,7 @@ function WorkDetailPage({
   index: number
   onBack: () => void
 }) {
+  const { tx } = useLang()
   const work = artist.works[index]
   const no = `No.${String(index + 1).padStart(2, '0')}`
 
@@ -1021,7 +1035,7 @@ function WorkDetailPage({
         <img
           className="rn-work-img rn-anim-fade"
           src={work.image}
-          alt={work.title ?? `${artist.name} — Work ${index + 1}`}
+          alt={work.title ? tx(work.title) : `${artist.name} — Work ${index + 1}`}
         />
         <div className="rn-work-caption">
           <div className="rn-work-caption-left">
@@ -1029,7 +1043,7 @@ function WorkDetailPage({
               Work {no} — {artist.name}
             </span>
             <span className="rn-work-title-row">
-              <strong>{work.title ?? no}</strong>
+              <strong>{work.title ? tx(work.title) : no}</strong>
               {work.year && <span>{work.year}</span>}
             </span>
           </div>
@@ -1079,12 +1093,12 @@ function WorkDetailPage({
         {work.note.length > 0 && (
           <div className="rn-work-note" style={{ whiteSpace: 'pre-line' }}>
             {work.note.map((p) => (
-              <p key={p}>{p}</p>
+              <p key={p}>{tx(p)}</p>
             ))}
           </div>
         )}
 
-        <p className="rn-work-notice">※ {IMAGE_NOTICE}</p>
+        <p className="rn-work-notice">※ {tx(IMAGE_NOTICE)}</p>
 
         {artist.instagram && (
           <a
@@ -1108,6 +1122,7 @@ function WorkDetailPage({
 /** 그리드 타일 한 장에 필요한 표시값. 작가 작품과 제품을 같은 모양으로 맞춘다. */
 function describeWorkItem(
   item: WorkItem,
+  tx: (ko: string) => string,
   onOpenWork: (artistIndex: number, workIndex: number) => void,
   onOpenProduct: (index: number) => void
 ) {
@@ -1117,13 +1132,13 @@ function describeWorkItem(
     return {
       key: `work-${item.artistIndex}-${item.workIndex}`,
       image: work.image,
-      title: work.title ?? `${artist.name} — Work ${item.workIndex + 1}`,
+      title: work.title ? tx(work.title) : `${artist.name} — Work ${item.workIndex + 1}`,
       by: artist.name,
       kindLabel: artist.role === 'paint' ? 'Painting' : artist.role,
       price:
         work.price !== null
           ? `₩${work.price.toLocaleString('ko-KR')}`
-          : '가격 미정',
+          : tx('가격 미정'),
       // 그림은 비율이 제각각이라 잘라내지 않고 패널 위에 통째로 올린다.
       isArt: true,
       go: () => onOpenWork(item.artistIndex, item.workIndex),
@@ -1136,7 +1151,7 @@ function describeWorkItem(
     title: p.name,
     by: p.meta.replace(/^.*Designed by\s*/, ''),
     kindLabel: 'Object',
-    price: p.price ?? '가격 미정 · Coming Soon',
+    price: p.price ?? tx('오픈 예정'),
     isArt: false,
     go: () => onOpenProduct(item.productIndex),
   }
@@ -1161,6 +1176,7 @@ function WorksGrid({
   onOpenWork: (artistIndex: number, workIndex: number) => void
   onOpenProduct: (index: number) => void
 }) {
+  const { tx } = useLang()
   return (
     <div className="rn-works">
       <div className="rn-works-head">
@@ -1178,7 +1194,7 @@ function WorksGrid({
       </div>
       <div className="rn-works-grid">
         {items.map((item) => {
-          const v = describeWorkItem(item, onOpenWork, onOpenProduct)
+          const v = describeWorkItem(item, tx, onOpenWork, onOpenProduct)
           return (
             <Reveal key={v.key}>
             <button type="button" className="rn-work-tile" onClick={v.go}>
@@ -1235,6 +1251,7 @@ function ProductDetailPage({
   index: number
   onBack: () => void
 }) {
+  const { tx } = useLang()
   const product = PRODUCTS[index]
   const [option, setOption] = useState(product.defaultOption)
   const [imgIdx, setImgIdx] = useState(0)
@@ -1297,7 +1314,7 @@ function ProductDetailPage({
           <span className="rn-eyebrow">Vol.01 / Founders Edition</span>
           <h1 className="rn-pd-title">{product.name}</h1>
           <div className="rn-pd-pricerow">
-            <span className="rn-pd-price">{product.price ?? '가격 미정'}</span>
+            <span className="rn-pd-price">{product.price ?? tx('오픈 예정')}</span>
             <span className="rn-pd-edition">
               {no} · {product.meta}
             </span>
@@ -1332,7 +1349,7 @@ function ProductDetailPage({
             </details>
           )}
           <details className="rn-pd-details">
-            <summary>DIRECTOR'S NOTE — 142일의 기록</summary>
+            <summary>{tx("DIRECTOR'S NOTE — 142일의 기록")}</summary>
             <div className="rn-pd-director">
               <DirectorView productNo={index + 1} />
             </div>
@@ -1349,7 +1366,7 @@ function ProductDetailPage({
             </button>
           ) : (
             <button type="button" className="rn-cta-main is-soon" disabled>
-              COMING SOON
+              {tx('오픈 예정')}
             </button>
           )}
         </div>
@@ -1359,6 +1376,7 @@ function ProductDetailPage({
 }
 
 function ExhibitionPage() {
+  const { tx } = useLang()
   const [active, setActive] = useState(0)
   const roomsWrapRef = useRef<HTMLDivElement | null>(null)
 
@@ -1430,8 +1448,8 @@ function ExhibitionPage() {
 
       <footer className="exh-foot">
         <p>
-          이 전시는 온라인에서만 열립니다. <br />
-          Founders Edition 멤버에게는 다음 전시의 초대장이 가장 먼저 도착합니다.
+          {tx('이 전시는 온라인에서만 열립니다.')} <br />
+          {tx('Founders Edition 멤버에게는 다음 전시의 초대장이 가장 먼저 도착합니다.')}
         </p>
       </footer>
     </section>
@@ -1447,6 +1465,7 @@ function Room({
   index: number
   total: number
 }) {
+  const { tx } = useLang()
   const ref = useRef<HTMLDivElement | null>(null)
   const [shown, setShown] = useState(false)
 
@@ -1486,8 +1505,8 @@ function Room({
           <span className="room-info-title">{room.title}</span>
         </div>
 
-        <h2 className="room-headline">{room.headline}</h2>
-        <p className="room-body">{room.body}</p>
+        <h2 className="room-headline">{tx(room.headline)}</h2>
+        <p className="room-body">{tx(room.body)}</p>
 
         <div className="room-info-bottom">
           <span className="room-position">
@@ -1505,6 +1524,7 @@ function Room({
 }
 
 function DirectorView({ productNo }: { productNo: number }) {
+  const { tx } = useLang()
   const credits = [
     {
       role: 'Director',
@@ -1530,12 +1550,11 @@ function DirectorView({ productNo }: { productNo: number }) {
         <p className="director-eyebrow">
           Director's Note · No.{String(productNo).padStart(3, '0')}
         </p>
-        <h2 className="director-title">
-          한 벌의 옷이 만들어진<br />142일의 기록
+        <h2 className="director-title" style={{ whiteSpace: 'pre-line' }}>
+          {tx('한 벌의 옷이 만들어진\n142일의 기록')}
         </h2>
         <p className="director-lede">
-          이 옷이 완성되기까지의 시간을 기록합니다. 패턴, 원단, 봉제,
-          마지막 단추까지 — 이 페이지는 옷의 이력서입니다.
+          {tx('이 옷이 완성되기까지의 시간을 기록합니다. 패턴, 원단, 봉제, 마지막 단추까지 — 이 페이지는 옷의 이력서입니다.')}
         </p>
       </header>
 
@@ -1580,7 +1599,7 @@ function DirectorView({ productNo }: { productNo: number }) {
                   <span className="credit-name">{c.name}</span>
                 </div>
                 <p className="credit-handle">{c.handle}</p>
-                <p className="credit-quote">“{c.quote}”</p>
+                <p className="credit-quote">“{tx(c.quote)}”</p>
               </div>
             </article>
           ))}
@@ -1687,6 +1706,7 @@ const BRAND_CHAPTERS = [
  * 챕터마다 좌/우 정렬 교차. Member 탭은 기존 뷰 유지.
  */
 function BrandPage() {
+  const { tx } = useLang()
   const [tab, setTab] = useState<'story' | 'member'>('story')
 
   return (
@@ -1718,10 +1738,8 @@ function BrandPage() {
             </span>
             <div className="rn-brand-hero-inner">
               <span className="rn-eyebrow">Find Your, Lead Future</span>
-              <h1>
-                하루는 86400초.
-                <br />그 모든 순간이
-                <br />'나'가 된다.
+              <h1 style={{ whiteSpace: 'pre-line' }}>
+                {tx("하루는 86400초.\n그 모든 순간이\n'나'가 된다.")}
               </h1>
               <span className="rn-brand-meta">
                 2026 — Ongoing · Seoul · by 86400
@@ -1734,10 +1752,8 @@ function BrandPage() {
           ))}
 
           <div className="rn-brand-finale">
-            <p>
-              나는 시간을 거스를 수 없다.
-              <br />
-              그러나 나의 86400은 만들어낼 수 있다.
+            <p style={{ whiteSpace: 'pre-line' }}>
+              {tx('나는 시간을 거스를 수 없다.\n그러나 나의 86400은 만들어낼 수 있다.')}
             </p>
             <img src={logoWhite} alt="86400" />
           </div>
@@ -1754,6 +1770,7 @@ function BrandChapter({
   chapter: (typeof BRAND_CHAPTERS)[number]
   right: boolean
 }) {
+  const { tx } = useLang()
   const { ref, shown } = useReveal<HTMLElement>()
   return (
     <article
@@ -1769,23 +1786,22 @@ function BrandChapter({
         <span className="rn-eyebrow">
           {chapter.no} — {chapter.tag}
         </span>
-        <h2 style={{ whiteSpace: 'pre-line' }}>{chapter.title}</h2>
-        <p>{chapter.body}</p>
+        <h2 style={{ whiteSpace: 'pre-line' }}>{tx(chapter.title)}</h2>
+        <p>{tx(chapter.body)}</p>
       </div>
     </article>
   )
 }
 
 function MemberView() {
+  const { tx } = useLang()
   return (
     <div className="member-view">
       <header className="member-hero">
         <p className="member-eyebrow">Studio · Two Eyes</p>
-        <h2 className="member-title">그리는 손, 보고 결정하는 눈.</h2>
+        <h2 className="member-title">{tx('그리는 손, 보고 결정하는 눈.')}</h2>
         <p className="member-lede">
-          86400은 두 사람의 시선으로 만들어진다. 하나는 디자인을 그리는
-          손, 하나는 그것을 보고 어떤 옷이 86400의 이름으로 나갈지
-          결정하는 눈. 두 시선이 겹쳐지는 자리에 한 벌의 옷이 남는다.
+          {tx('86400은 두 사람의 시선으로 만들어진다. 하나는 디자인을 그리는 손, 하나는 그것을 보고 어떤 옷이 86400의 이름으로 나갈지 결정하는 눈. 두 시선이 겹쳐지는 자리에 한 벌의 옷이 남는다.')}
         </p>
       </header>
 
@@ -1799,7 +1815,7 @@ function MemberView() {
               <div className="member-info">
                 <span className="member-role">{m.role}</span>
                 <span className="member-name">{m.name}</span>
-                <p className="member-quote">“{m.quote}”</p>
+                <p className="member-quote">“{tx(m.quote)}”</p>
               </div>
             </article>
           </RevealMember>
@@ -1831,6 +1847,8 @@ function RevealMember({
 function GlobalNav({
   dark = false,
   solid = false,
+  paper = false,
+  hidden = false,
   onLogoClick,
   onStoryClick,
   onArtistClick,
@@ -1838,13 +1856,35 @@ function GlobalNav({
 }: {
   dark?: boolean
   solid?: boolean
+  /** 홈 히어로(종이색) 위에 있을 때 — 검정 로고 + 반투명 종이 바탕. */
+  paper?: boolean
+  /** 홈 맨 위에서는 숨겼다가 스크롤이 시작되면 내려온다. */
+  hidden?: boolean
   onLogoClick: () => void
   onStoryClick: () => void
   onArtistClick: () => void
   onWorksClick: () => void
 }) {
+  const { lang, setLang, tx } = useLang()
   // 좁은 화면에선 메뉴가 숨겨지므로 오른쪽에서 나오는 서랍으로 대신한다.
   const [menuOpen, setMenuOpen] = useState(false)
+  const [langOpen, setLangOpen] = useState(false)
+
+  // 언어 목록은 바깥을 누르면 닫는다.
+  useEffect(() => {
+    if (!langOpen) return
+    const onDown = (e: MouseEvent) => {
+      if (!(e.target as HTMLElement).closest('.nav-lang')) setLangOpen(false)
+    }
+    window.addEventListener('mousedown', onDown)
+    return () => window.removeEventListener('mousedown', onDown)
+  }, [langOpen])
+
+  const pickLang = (code: Lang) => {
+    setLang(code)
+    setLangOpen(false)
+    setMenuOpen(false)
+  }
 
   useEffect(() => {
     if (!menuOpen) return
@@ -1880,7 +1920,7 @@ function GlobalNav({
     <nav
       className={`global-nav ${dark ? 'is-dark' : ''} ${
         solid ? 'fig-nav-solid' : ''
-      }`}
+      } ${paper ? 'is-paper' : ''} ${hidden && !menuOpen ? 'is-hidden' : ''}`}
     >
       <button
         type="button"
@@ -1889,7 +1929,7 @@ function GlobalNav({
         aria-label="Home"
       >
         {/* 네비는 밝은 스킨/어두운 스킨 두 가지라 로고도 같이 반전시킨다. */}
-        <img src={dark || solid ? logoWhite : logoBlack} alt="86400" />
+        <img src={dark || solid ? lockupWhite : lockupBlack} alt="86400" />
       </button>
       {/* Brand · Artist · Works — 작품과 제품을 Works 하나로 묶었다. */}
       <ul className="nav-menu">
@@ -1902,6 +1942,33 @@ function GlobalNav({
         ))}
       </ul>
       <div className="nav-actions">
+        <div className="nav-lang">
+          <button
+            type="button"
+            className="nav-lang-btn"
+            aria-label={tx('언어')}
+            aria-haspopup="listbox"
+            aria-expanded={langOpen}
+            onClick={() => setLangOpen((v) => !v)}
+          >
+            {LANGS.find((l) => l.code === lang)?.short ?? 'KO'}
+          </button>
+          {langOpen && (
+            <ul className="nav-lang-menu" role="listbox" aria-label={tx('언어')}>
+              {LANGS.map((l) => (
+                <li key={l.code} role="option" aria-selected={l.code === lang}>
+                  <button
+                    type="button"
+                    className={l.code === lang ? 'is-active' : ''}
+                    onClick={() => pickLang(l.code)}
+                  >
+                    {l.label} <small>{l.short}</small>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
         <button type="button" className="nav-icon" aria-label="Search">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="11" cy="11" r="7" />
@@ -1974,6 +2041,18 @@ function GlobalNav({
           </li>
         ))}
       </ul>
+      <div className="nav-drawer-langs" aria-label={tx('언어')}>
+        {LANGS.map((l) => (
+          <button
+            key={l.code}
+            type="button"
+            className={l.code === lang ? 'is-active' : ''}
+            onClick={() => pickLang(l.code)}
+          >
+            {l.short}
+          </button>
+        ))}
+      </div>
     </aside>
     </>
   )
@@ -1987,6 +2066,7 @@ function Footer({
   onCookieSettings: () => void
   onNavigate: (page: Page) => void
 }) {
+  const { tx } = useLang()
   const year = new Date().getFullYear()
   const go = (page: Page) => () => onNavigate(page)
   const nav = (label: string, page: Page) => (
@@ -1999,7 +2079,7 @@ function Footer({
   const soon = (label: string) => (
     <li>
       <span className="footer-soon">
-        {label} <small>준비 중</small>
+        {label} <small>{tx('준비 중')}</small>
       </span>
     </li>
   )
@@ -2008,10 +2088,10 @@ function Footer({
       <div className="footer-inner">
         <div className="footer-brand">
           <h2 className="footer-logo">
-            <img src={logoWhite} alt="86400" />
+            <img src={lockupWhite} alt="86400" />
           </h2>
           <p className="footer-tagline">
-            불확실한 미래에 확실한 나를 보여주는
+            {tx('불확실한 미래에 확실한 나를 보여주는')}
           </p>
         </div>
 
@@ -2067,20 +2147,20 @@ function Footer({
       <div className="footer-legal">
         <BusinessInfo className="footer-biz" />
         <div className="footer-legal-links">
-          <button type="button" onClick={go('terms')}>이용약관</button>
+          <button type="button" onClick={go('terms')}>{tx('이용약관')}</button>
           <button type="button" className="is-privacy" onClick={go('privacy')}>
-            개인정보처리방침
+            {tx('개인정보처리방침')}
           </button>
-          <button type="button" onClick={onCookieSettings}>쿠키 설정</button>
+          <button type="button" onClick={onCookieSettings}>{tx('쿠키 설정')}</button>
           <a href={FTC_BIZ_INFO_URL} target="_blank" rel="noopener noreferrer">
-            사업자정보확인 ↗
+            {tx('사업자정보확인')} ↗
           </a>
         </div>
       </div>
 
       <div className="footer-bottom">
         <p>© {year} {COMPANY.brand}. All rights reserved.</p>
-        <p>{COMPANY.brand}는 통신판매 당사자로서 상품, 상품정보, 거래에 관한 책임을 집니다.</p>
+        <p>{tx('{brand}는 통신판매 당사자로서 상품, 상품정보, 거래에 관한 책임을 집니다.', { brand: COMPANY.brand })}</p>
       </div>
     </footer>
   )
@@ -2130,6 +2210,7 @@ function CookieConsent({ open, onClose }: { open: boolean; onClose: () => void }
 }
 
 function CookieConsentPanel({ onClose }: { onClose: () => void }) {
+  const { tx } = useLang()
   const [detail, setDetail] = useState(false)
   const [analytics, setAnalytics] = useState(() => readCookieConsent()?.analytics ?? true)
 
@@ -2156,11 +2237,10 @@ function CookieConsentPanel({ onClose }: { onClose: () => void }) {
     >
       <span className="rn-eyebrow">Cookies</span>
       <h2 id="rn-cookie-title" className="rn-cookie-title">
-        쿠키를 사용합니다
+        {tx('쿠키를 사용합니다')}
       </h2>
       <p id="rn-cookie-body" className="rn-cookie-body">
-        86400은 사이트 동작에 필요한 필수 쿠키와, 방문 통계를 위한 분석 쿠키를
-        사용합니다. 분석 쿠키는 동의한 경우에만 저장됩니다.
+        {tx('86400은 사이트 동작에 필요한 필수 쿠키와, 방문 통계를 위한 분석 쿠키를 사용합니다. 분석 쿠키는 동의한 경우에만 저장됩니다.')}
       </p>
 
       <button
@@ -2169,23 +2249,23 @@ function CookieConsentPanel({ onClose }: { onClose: () => void }) {
         aria-expanded={detail}
         onClick={() => setDetail((v) => !v)}
       >
-        {detail ? '접기 ↑' : '자세히 보기 ↓'}
+        {detail ? tx('접기 ↑') : tx('자세히 보기 ↓')}
       </button>
 
       {detail && (
         <ul className="rn-cookie-list">
           <li>
             <span className="rn-cookie-row">
-              <span className="rn-cookie-name">필수</span>
-              <span className="rn-cookie-state">항상 사용</span>
+              <span className="rn-cookie-name">{tx('필수')}</span>
+              <span className="rn-cookie-state">{tx('항상 사용')}</span>
             </span>
             <span className="rn-cookie-desc">
-              화면 설정, 동의 여부 저장 등 사이트가 동작하는 데 필요합니다.
+              {tx('화면 설정, 동의 여부 저장 등 사이트가 동작하는 데 필요합니다.')}
             </span>
           </li>
           <li>
             <label className="rn-cookie-row">
-              <span className="rn-cookie-name">분석</span>
+              <span className="rn-cookie-name">{tx('분석')}</span>
               <input
                 type="checkbox"
                 checked={analytics}
@@ -2193,7 +2273,7 @@ function CookieConsentPanel({ onClose }: { onClose: () => void }) {
               />
             </label>
             <span className="rn-cookie-desc">
-              방문 수와 페이지 이동 통계를 익명으로 수집합니다.
+              {tx('방문 수와 페이지 이동 통계를 익명으로 수집합니다.')}
             </span>
           </li>
         </ul>
@@ -2201,14 +2281,14 @@ function CookieConsentPanel({ onClose }: { onClose: () => void }) {
 
       <div className="rn-cookie-actions">
         <button type="button" className="rn-cookie-ghost" onClick={() => save(false)}>
-          필수만 허용
+          {tx('필수만 허용')}
         </button>
         <button
           type="button"
           className="rn-cookie-main"
           onClick={() => save(detail ? analytics : true)}
         >
-          {detail ? '선택 저장' : '모두 허용'}
+          {detail ? tx('선택 저장') : tx('모두 허용')}
         </button>
       </div>
     </aside>
